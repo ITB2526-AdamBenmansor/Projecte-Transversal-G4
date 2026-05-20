@@ -192,6 +192,70 @@ Els paràmetres més rellevants de la configuració són:
 - `User=innovatech-admin`: el procés s'executa amb l'usuari
   específic del projecte, no amb root.
 
+### 2.5 Verificació del servei
+
+**Verificació a nivell de sistema:**
+
+```bash
+sudo systemctl status icecast2
+ss -tlnp | grep 8000
+```
+
+La comanda `ss -tlnp` confirma que el port 8000 es troba en
+estat `LISTEN` i que el procés responsable és `icecast2`,
+consistent amb la configuració definida al fitxer `icecast.xml`.
+
+![Servei Icecast2 actiu](captures/07-icecast2-actiu.png)
+![Port 8000 en estat LISTEN](captures/08-port-8000.png)
+
+**Verificació via interfície web:**
+
+Icecast2 inclou una interfície web integrada accessible des
+de qualsevol navegador sense necessitat de programari addicional:
+
+- **Pàgina principal:** `http://54.80.18.165:8000/`
+- **Panell d'administració:** `http://54.80.18.165:8000/admin/`
+- **Llista de muntatges:** `http://54.80.18.165:8000/admin/listmounts.xsl`
+
+El panell d'administració mostra les estadístiques globals
+del servidor: nombre de clients connectats, connexions totals,
+hostname i versió d'Icecast2 instal·lada.
+
+La secció de muntatges actius confirma que els dos canals
+estan operatius amb les seves fonts ffmpeg connectades
+i emetent en temps real.
+
+![Panell d'administració Icecast2](captures/10-icecast2-admin.png)
+![Muntatges actius al panell](captures/14-icecast2-mountpoints.png)
+
+**Verificació des de clients:**
+
+S'ha verificat l'accés al servei des de dos tipus de clients:
+
+1. **Navegador web:** els dos canals són accessibles
+   directament introduint la URL al navegador. El navegador
+   reprodueix l'àudio mitjançant HTML5 sense necessitat de
+   cap programari addicional.
+
+2. **VLC Media Player:** client d'àudio dedicat compatible
+   amb tots els sistemes operatius, que accedeix al canal
+   via la funció d'obertura de flux de xarxa.
+
+![Canal corporatiu reproduint al navegador](captures/15-navegador-corporate.png)
+![Canal formació reproduint al navegador](captures/16-navegador-formacio.png)
+![VLC reproduint el canal corporatiu](captures/17-vlc-reproduint.png)
+
+### 2.6 Incidències i solucions
+
+Durant la implementació del servei d'àudio es van detectar
+les incidències següents:
+
+| Incidència | Causa | Solució |
+|-----------|-------|---------|
+| Pàgina web no carregava des de fora | Port 8000 no obert al Security Group d'AWS | Afegir regla d'entrada al Security Group per al port 8000 TCP |
+| Serveis ffmpeg amb error status=8 | Contrasenya incorrecta a la URL d'Icecast | Actualitzar la contrasenya correcta `@ITB2026` als fitxers de servei |
+| Canal `/formacio` no carregava al navegador | Format OGG no compatible amb navegadors | Canviar el còdec de sortida de `libvorbis` a `libmp3lame` mantenint el fitxer font OGG |
+
 ![Servei icecast-corporate actiu](captures/07-icecast2-actiu.png)
 ![Servei icecast-formacio actiu](captures/12-icecast-formacio-actiu.png)
 ![Servei icecast-formacio actualitzat](captures/13-icecast-formacio-service.png)
