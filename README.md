@@ -54,7 +54,7 @@ serveis d'àudio en streaming (Icecast2), vídeo en streaming
 | IP pública | 54.157.67.55 |
 | Regió AWS | eu-west-1 (Irlanda) |
 
-![Instància EC2 en estat running](captures/Bloc2-01.png)
+![Instància EC2 en estat running]()
 
 ### 1.1 Usuari d'administració
 
@@ -78,7 +78,7 @@ sudo chmod 700 /home/innovatech-admin/.ssh
 sudo chmod 600 /home/innovatech-admin/.ssh/authorized_keys
 sudo passwd -l ubuntu
 ```
-![Connexió SSH amb innovatech-admin] (https://github.com/ITB2526-AdamBenmansor/Projecte-Transversal/blob/main/assets/capturas/Captura%20de%20pantalla%20de%202026-05-26%2009-29-11.png)
+![Connexió SSH amb innovatech-admin](captures/Bloc2-02.png)
 
 ### 1.2 Seguretat de xarxa
 
