@@ -28,7 +28,8 @@ La base física de nuestro proyecto se asienta sobre la nube de Amazon Web Servi
     * **Màquina 4: Servidor de Streaming**
     * **Màquina 5: Base de Dades (Maria DB)**
 
-> **📸 INSERTA AQUÍ LA CAPTURA 3:** Captura del panel de Instancias EC2 en AWS donde se ven las 5 máquinas en estado "Running".
+
+<img width="1506" height="305" alt="image" src="https://github.com/user-attachments/assets/ae660041-74a3-48ce-b473-daf028ea0822" />
 
 ---
 
