@@ -80,7 +80,7 @@ sudo passwd -l ubuntu
 ```
 <img width="1002" height="506" alt="Captura de pantalla de 2026-05-26 09-26-58" src="https://github.com/user-attachments/assets/ce85e9da-6ba2-4e70-91fa-2df828d3e761" />
 
-![Connexió SSH amb innovatech-admin]([captures/02-ssh-admin.png](https://github.com/ITB2526-AdamBenmansor/Projecte-Transversal/blob/main/assets/capturas/Captura%20de%20pantalla%20de%202026-05-26%2009-29-11.png))
+![Connexió SSH amb innovatech-admin] (https://github.com/ITB2526-AdamBenmansor/Projecte-Transversal/blob/main/assets/capturas/Captura%20de%20pantalla%20de%202026-05-26%2009-29-11.png)
 
 ### 1.2 Seguretat de xarxa
 
