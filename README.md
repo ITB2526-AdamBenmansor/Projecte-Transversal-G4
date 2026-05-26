@@ -137,8 +137,7 @@ d'accés per als rols de source, relay i administrador:
 | Relay password | @ITB2026 |
 | Admin password | @ITB2026 |
 
-![Assistent configuració Icecast2](captures/05-icecast2-assistent.png)
-![Icecast2 instal·lat correctament](captures/06-icecast2-instalat.png)
+![Assistent configuració Icecast2](captures/Bloc2-05.png)
 
 ### 2.3 Configuració
 
@@ -156,7 +155,7 @@ S'han configurat dos canals amb formats diferenciats:
   qualitat de veu al mateix bitrate, ideal per a sessions
   formatives.
 
-![Fitxer de configuració icecast.xml](captures/07-icecast2-config.png)
+![Fitxer de configuració icecast.xml](captures/Bloc2-07.png)
 
 ### 2.4 Font d'àudio amb ffmpeg
 
@@ -171,7 +170,7 @@ Fitxers d'àudio preparats al directori
 - `corporate.mp3`: canal corporatiu, emès a 128 kbps en MP3.
 - `formacio.ogg`: canal de formació, emès a 96 kbps en OGG Vorbis.
 
-![Fitxers d'àudio al servidor](captures/08-audio-fitxers.png)
+![Fitxers d'àudio al servidor](captures/Bloc2-08.png)
 
 S'han creat dos serveis systemd per garantir l'inici automàtic
 i la recuperació en cas de fallada:
@@ -227,8 +226,8 @@ Els paràmetres més rellevants dels serveis són:
 - `-content_type application/ogg`: força el Content-Type correcte
   per al canal OGG (solució a la incidència detectada).
 
-![Servei icecast-corporate actiu](captures/09-icecast-corporate-actiu.png)
-![Servei icecast-formacio actiu](captures/10-icecast-formacio-actiu.png)
+![Servei icecast-corporate actiu](captures/Bloc2-09.png)
+![Servei icecast-formacio actiu](captures/Bloc2-10.png)
 
 ### 2.5 Verificació del servei
 
