@@ -54,7 +54,7 @@ serveis d'àudio en streaming (Icecast2), vídeo en streaming
 | IP pública | 54.157.67.55 |
 | Regió AWS | eu-west-1 (Irlanda) |
 
-![Instància EC2 en estat running](captures/01-ec2-running.png)
+![Instància EC2 en estat running](assets/capturas/Captura de pantalla de 2026-05-26 09-29-11.png)
 
 ### 1.1 Usuari d'administració
 
