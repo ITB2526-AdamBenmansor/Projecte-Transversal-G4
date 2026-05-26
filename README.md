@@ -1,5 +1,5 @@
 # Bloc 2 — Serveis de Xarxa i Internet (0375)
-
+https://github.com/ITB2526-AdamBenmansor/Projecte-Transversal/blob/main/assets/capturas/Captura%20de%20pantalla%20de%202026-05-26%2009-29-11.png
 ## Índex
 - [1. Preparació del servidor](#1-preparació-del-servidor)
 - [2. Servei d'àudio — Icecast2](#2-servei-daudio--icecast2)
