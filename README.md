@@ -18,8 +18,9 @@ La base física de nuestro proyecto se asienta sobre la nube de Amazon Web Servi
 * **Claves de Acceso:** Generamos un par de claves criptográficas (`innovate-tech-key`) de tipo RSA/ED25519. Este archivo `.pem` es nuestro pase de seguridad exclusivo; sin él, es imposible acceder a las terminales, mitigando así ataques de fuerza bruta.
 * **Security Groups (Firewall):** Siguiendo el principio de "mínimo privilegio", configuramos nuestro firewall de AWS para bloquear todo el tráfico externo por defecto. Solo permitimos el acceso a los puertos estrictamente necesarios (como el 22 para SSH desde nuestras IPs autorizadas, o el 80/443 para tráfico web). A nivel interno, habilitamos que todas las máquinas de nuestra VPC puedan comunicarse libremente entre sí.
 
-> **📸 INSERTA AQUÍ LA CAPTURA 1:** Captura de la consola de AWS creando el Key Pair (`innovate-tech-key`).
-> **📸 INSERTA AQUÍ LA CAPTURA 2:** Captura de las reglas del Security Group en AWS (Inbound Rules).
+<img width="899" height="726" alt="image" src="https://github.com/user-attachments/assets/d234b774-4701-42c6-ae89-3c96f9de14af" />
+
+<img width="1554" height="627" alt="image" src="https://github.com/user-attachments/assets/6c2219c2-e32a-406a-bf74-2c38219cf65f" />
 
 * Levantamos **5 servidores clave** (Instancias EC2) con Ubuntu, cada uno con un rol específico:
     * **Màquina 1: Servei Web - Apache / SFTP (Ansible)**
@@ -38,8 +39,10 @@ En una empresa real, ir máquina por máquina instalando servicios a mano es ine
 
 En la **Màquina 1**, me encargué de dar de alta al usuario `admin-itb` con permisos de administrador (sudo) y le configuré nuestras llaves SSH. Después, desde nuestra **Màquina 3** (el cerebro de Ansible), definimos el inventario de hosts e iniciamos la magia. Escribí y lancé nuestro primer Playbook (`mi_config.yml`). Este script se conectó por SSH a la Màquina 1, actualizó los paquetes del sistema e instaló Apache2 de forma totalmente desatendida y automática.
 
-> **📸 INSERTA AQUÍ LA CAPTURA 4:** Captura lanzando el ping de Ansible (`ansible servidores -m ping`) donde las máquinas responden con "pong".
-> **📸 INSERTA AQUÍ LA CAPTURA 5:** Captura de la terminal ejecutando el playbook de instalación de Apache (`ansible-playbook mi_config.yml`).
+<img width="689" height="662" alt="image" src="https://github.com/user-attachments/assets/a1bc463e-b2d3-45fb-8ffa-2ab478979615" />
+
+<img width="673" height="418" alt="image" src="https://github.com/user-attachments/assets/14d6e738-6402-4571-a267-c6da68590207" />
+
 
 ---
 
@@ -48,7 +51,9 @@ Para evitar el caos administrativo de tener cuentas de usuario dispersas e indep
 
 Configuré nuestro propio árbol de dominio llamado `innovatetech.itb.cat`. Para poblar este directorio, inyecté en el servidor una serie de archivos de estructura `.ldif` para crear las unidades organizativas (OUs) de *grups* y *usuaris*. A modo de validación, creamos nuestro primer usuario corporativo 100% centralizado: `sftpuser`, asignándole un ID de grupo, un directorio *home* y su respectiva contraseña.
 
-> **📸 INSERTA AQUÍ LA CAPTURA 6:** Captura de la terminal de la M2 ejecutando `slapcat` o viendo cómo se añade el archivo estructural `usuario.ldif`.
+<img width="942" height="557" alt="image" src="https://github.com/user-attachments/assets/b893ad65-c8c0-4b81-8be1-bd2dabd1a92c" />
+
+<img width="1384" height="194" alt="image" src="https://github.com/user-attachments/assets/099b0c25-ec58-4d96-8bc0-a46e62457359" />
 
 ---
 
@@ -57,12 +62,15 @@ El LDAP de la M2 es inútil si el resto de máquinas no saben cómo preguntarle 
 
 Instalé el demonio **SSSD** en la **Màquina 1** y lo configuré para que leyera e interpretara a los usuarios alojados en la Màquina 2 de forma transparente.
 
-> **📸 INSERTA AQUÍ LA CAPTURA 7:** Tu captura del comando `getent passwd sftpuser` en la M1 devolviendo con éxito el usuario, demostrando que SSSD funciona. *(La captura que me enseñaste antes).*
+<img width="779" height="100" alt="image" src="https://github.com/user-attachments/assets/e049f259-1b20-4395-a002-bf2110a29a1f" />
+
 
 A continuación, implementamos un servicio de transferencia de archivos seguro (**SFTP**). Para garantizar que un usuario subcontratado o externo no pudiera cotillear los archivos críticos del sistema operativo Ubuntu, apliqué una política estricta de seguridad llamada **Chroot Jail** (`ChrootDirectory` en SSH). Esto "enjaula" al `sftpuser` cuando se conecta, limitando su visión exclusivamente a su carpeta asignada `/home/sftpuser/pujades`. Finalmente, modificamos el *DocumentRoot* de Apache para que cargase el contenido de esa misma carpeta de cara al público.
 
-> **📸 INSERTA AQUÍ LA CAPTURA 8:** Captura de la conexión exitosa por SFTP a la M1 desde una terminal externa, mostrando la carpeta `pujades`.
-> **📸 INSERTA AQUÍ LA CAPTURA 9:** Captura de la página web principal (la del payload verde "DOLPHINSEC" u "HORARIO CLASSR") funcionando a través de la IP de la web.
+<img width="853" height="260" alt="image" src="https://github.com/user-attachments/assets/5db3285b-74ea-4b36-b1ed-a28f3ac0e010" />
+
+<img width="530" height="544" alt="image" src="https://github.com/user-attachments/assets/b7b76914-070f-4b1c-ae94-fb4c5c8e1cf2" />
+
 
 ---
 
@@ -71,8 +79,10 @@ La trazabilidad es clave en la ciberseguridad. Para evitar tener que acceder a 5
 
 En la Màquina 3, descomenté los módulos `imudp` e `imtcp` en la configuración de `rsyslog` para que abriera el puerto 514 y escuchara el tráfico de red. Posteriormente, con un nuevo Playbook de Ansible (`configurar_logs.yml`), modifiqué de golpe la configuración interna de todos los demás servidores. La regla inyectada obligaba a cada máquina a enviar una copia en tiempo real de cualquier evento del sistema (errores, reinicios, logins) directamente a la Màquina 3. Ahora disponemos de un punto único de monitorización.
 
-> **📸 INSERTA AQUÍ LA CAPTURA 10:** Captura de la ejecución del Playbook de centralización de logs (`configurar_logs.yml`).
-> **📸 INSERTA AQUÍ LA CAPTURA 11:** Tu captura de la M3 filtrando errores con `grep "slapd" /var/log/syslog` donde cazamos los avisos de la M2 de "sudoHost". *(La captura en la que arreglaste el problema del pipe `|`).*
+<img width="1054" height="657" alt="image" src="https://github.com/user-attachments/assets/f1c1ec05-c572-4332-a3c8-464f2fbede4b" />
+
+<img width="1195" height="655" alt="image" src="https://github.com/user-attachments/assets/b89f859e-b27a-4182-9077-637c4a48124e" />
+
 
 ---
 
@@ -90,8 +100,10 @@ En una red con múltiples servicios, memorizar e introducir direcciones IP públ
 
 Definí un archivo de zona directa para el dominio privado `itb.local`. En ese archivo, vinculé nombres lógicos y descriptivos a cada nodo (`web`, `ldap`, `logs`, `stream`, `bd`) para que apuntaran a sus respectivas IPs privadas. Una vez la guía telefónica estuvo lista, programé otro Playbook de Ansible (`configurar_dns.yml`) que modificó el archivo `systemd-resolved` de todas las máquinas en segundos, obligándolas a consultar a la Màquina 2 para cualquier traducción de dominio.
 
-> **📸 INSERTA AQUÍ LA CAPTURA 13:** Captura del archivo de zona de BIND (`db.itb.local`) donde se ven los nombres (web, ldap...) mapeados a las IPs 172.31.x.x.
-> **📸 INSERTA AQUÍ LA CAPTURA 14:** Captura de la M3 haciendo un `ping stream.itb.local` exitoso.
+<img width="1022" height="668" alt="image" src="https://github.com/user-attachments/assets/e859b76f-02b3-4409-8749-59de28225b41" />
+
+<img width="1508" height="381" alt="image" src="https://github.com/user-attachments/assets/da0d2dc5-360c-41ad-9eff-805bc67c92cf" />
+
 
 ---
 
@@ -100,7 +112,7 @@ Para consolidar la infraestructura de identidad, faltaba extender la configuraci
 
 Con la sola pulsación del *Enter*, Ansible viajó simultáneamente a la **Màquina 1**, **Màquina 4** y **Màquina 5**, instaló los paquetes cliente de LDAP, inyectó la ruta de la M2 como autoridad de identificación y, como detalle técnico vital, activó el módulo `mkhomedir` mediante PAM. Esta funcionalidad asegura que cuando cualquier empleado registrado en LDAP inicia sesión por primera vez en un servidor, el sistema operativo le genera al instante su carpeta de trabajo personal.
 
-> **📸 INSERTA AQUÍ LA CAPTURA 15:** Captura de la terminal ejecutando y finalizando con éxito el playbook `unir_dominio.yml` con el resumen "PLAY RECAP" en verde/naranja.
+<img width="1045" height="771" alt="image" src="https://github.com/user-attachments/assets/83462072-2888-405d-9b7e-24336c86401e" />
 
 ---
 
@@ -109,8 +121,11 @@ El cierre técnico de nuestro despliegue fue la fortificación de la comunicaci�
 
 Al tratar con un dominio privado (`web.itb.local`) inaccesible desde el internet global, las autoridades certificadoras comerciales no podían validarnos. Como administrador de sistemas, generé mi propio **certificado criptográfico autofirmado** (`web-itb.crt` y `.key`) haciendo uso del paquete criptográfico OpenSSL, empleando el robusto algoritmo RSA de 2048 bits. Finalmente, diseñé y habilité un nuevo archivo de bloque *VirtualHost* en Apache (`web-ssl.conf`) indicándole las rutas de las llaves, consiguiendo así que todas las comunicaciones de nuestro portal web estén cifradas de extremo a extremo.
 
-> **📸 INSERTA AQUÍ LA CAPTURA 16:** Captura de la creación del certificado en consola con el comando OpenSSL (donde introdujiste los datos de País, Ciudad, "ITB", etc.).
-> **📸 INSERTA AQUÍ LA CAPTURA 17:** Tu captura de Firefox (`image_7edbcc.png`) mostrando el aviso de advertencia por ser un certificado autofirmado (demostrando que se está usando HTTPS).
+<img width="1186" height="634" alt="image" src="https://github.com/user-attachments/assets/c66e1f02-cc2e-4d4d-a945-84df377af633" />
+
+<img width="667" height="548" alt="image" src="https://github.com/user-attachments/assets/0d282eda-82d3-400e-90bc-f326b10bbf80" />
+
+<img width="736" height="458" alt="image" src="https://github.com/user-attachments/assets/06380633-8770-499f-aebd-16c2eceaeb22" />
 
 ---
 
