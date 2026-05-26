@@ -238,8 +238,8 @@ sudo systemctl status icecast2
 ss -tlnp | grep 8000
 ```
 
-![Servei Icecast2 active running](captures/11-icecast2-actiu.png)
-![Port 8000 en estat LISTEN](captures/12-port-8000.png)
+![Servei Icecast2 active running](captures/Bloc2-11.png)
+![Port 8000 en estat LISTEN](captures/Bloc2-12.png)
 
 **Verificació via interfície web:**
 
@@ -249,8 +249,8 @@ ss -tlnp | grep 8000
 | `http://54.157.67.55:8000/admin/` | Panell d'administració |
 | `http://54.157.67.55:8000/admin/listmounts.xsl` | Muntatges actius |
 
-![Panell d'administració Icecast2](captures/13-icecast2-admin.png)
-![Muntatges actius amb els dos canals](captures/14-icecast2-mountpoints.png)
+![Panell d'administració Icecast2](captures/Bloc2-13.png)
+![Muntatges actius amb els dos canals](captures/Bloc2-14.png)
 
 **Verificació Content-Type OGG:**
 
@@ -258,7 +258,7 @@ ss -tlnp | grep 8000
 curl -v http://localhost:8000/formacio 2>&1 | grep "Content-Type"
 ```
 
-![Content-Type application/ogg verificat](captures/15-content-type-ogg.png)
+![Content-Type application/ogg verificat](captures/Bloc2-15.png)
 
 **Verificació des de clients:**
 
