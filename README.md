@@ -20,6 +20,7 @@ La base física de nuestro proyecto se asienta sobre la nube de Amazon Web Servi
 
 <img width="899" height="726" alt="image" src="https://github.com/user-attachments/assets/d234b774-4701-42c6-ae89-3c96f9de14af" />
 
+
 <img width="1554" height="627" alt="image" src="https://github.com/user-attachments/assets/6c2219c2-e32a-406a-bf74-2c38219cf65f" />
 
 * Levantamos **5 servidores clave** (Instancias EC2) con Ubuntu, cada uno con un rol específico:
@@ -41,6 +42,7 @@ En la **Màquina 1**, me encargué de dar de alta al usuario `admin-itb` con per
 
 <img width="689" height="662" alt="image" src="https://github.com/user-attachments/assets/a1bc463e-b2d3-45fb-8ffa-2ab478979615" />
 
+
 <img width="673" height="418" alt="image" src="https://github.com/user-attachments/assets/14d6e738-6402-4571-a267-c6da68590207" />
 
 
@@ -52,6 +54,7 @@ Para evitar el caos administrativo de tener cuentas de usuario dispersas e indep
 Configuré nuestro propio árbol de dominio llamado `innovatetech.itb.cat`. Para poblar este directorio, inyecté en el servidor una serie de archivos de estructura `.ldif` para crear las unidades organizativas (OUs) de *grups* y *usuaris*. A modo de validación, creamos nuestro primer usuario corporativo 100% centralizado: `sftpuser`, asignándole un ID de grupo, un directorio *home* y su respectiva contraseña.
 
 <img width="942" height="557" alt="image" src="https://github.com/user-attachments/assets/b893ad65-c8c0-4b81-8be1-bd2dabd1a92c" />
+
 
 <img width="1384" height="194" alt="image" src="https://github.com/user-attachments/assets/099b0c25-ec58-4d96-8bc0-a46e62457359" />
 
@@ -69,6 +72,7 @@ A continuación, implementamos un servicio de transferencia de archivos seguro (
 
 <img width="853" height="260" alt="image" src="https://github.com/user-attachments/assets/5db3285b-74ea-4b36-b1ed-a28f3ac0e010" />
 
+
 <img width="530" height="544" alt="image" src="https://github.com/user-attachments/assets/b7b76914-070f-4b1c-ae94-fb4c5c8e1cf2" />
 
 
@@ -80,6 +84,7 @@ La trazabilidad es clave en la ciberseguridad. Para evitar tener que acceder a 5
 En la Màquina 3, descomenté los módulos `imudp` e `imtcp` en la configuración de `rsyslog` para que abriera el puerto 514 y escuchara el tráfico de red. Posteriormente, con un nuevo Playbook de Ansible (`configurar_logs.yml`), modifiqué de golpe la configuración interna de todos los demás servidores. La regla inyectada obligaba a cada máquina a enviar una copia en tiempo real de cualquier evento del sistema (errores, reinicios, logins) directamente a la Màquina 3. Ahora disponemos de un punto único de monitorización.
 
 <img width="1054" height="657" alt="image" src="https://github.com/user-attachments/assets/f1c1ec05-c572-4332-a3c8-464f2fbede4b" />
+
 
 <img width="1195" height="655" alt="image" src="https://github.com/user-attachments/assets/b89f859e-b27a-4182-9077-637c4a48124e" />
 
@@ -102,6 +107,7 @@ Definí un archivo de zona directa para el dominio privado `itb.local`. En ese a
 
 <img width="1022" height="668" alt="image" src="https://github.com/user-attachments/assets/e859b76f-02b3-4409-8749-59de28225b41" />
 
+
 <img width="1508" height="381" alt="image" src="https://github.com/user-attachments/assets/da0d2dc5-360c-41ad-9eff-805bc67c92cf" />
 
 
@@ -123,7 +129,9 @@ Al tratar con un dominio privado (`web.itb.local`) inaccesible desde el internet
 
 <img width="1186" height="634" alt="image" src="https://github.com/user-attachments/assets/c66e1f02-cc2e-4d4d-a945-84df377af633" />
 
+
 <img width="667" height="548" alt="image" src="https://github.com/user-attachments/assets/0d282eda-82d3-400e-90bc-f326b10bbf80" />
+
 
 <img width="736" height="458" alt="image" src="https://github.com/user-attachments/assets/06380633-8770-499f-aebd-16c2eceaeb22" />
 
