@@ -1,221 +1,187 @@
-# Bloc 2 — Serveis de Xarxa i Internet (0375)
+### 4.3 Instal·lació
 
-## Índex
-1. [Preparació del servidor](#1-preparació-del-servidor)
-2. [Servei d'àudio — Icecast2](#2-servei-daudio--icecast2)
-3. [Servei de vídeo — NGINX-RTMP](#3-servei-de-vídeo--nginx-rtmp)
-4. [Videoconferència — Jitsi Meet](#4-videoconferència--jitsi-meet)
-5. [Proves d'amplada de banda](#5-proves-damplada-de-banda)
+```bash
+# Afegir repositori Jitsi
+curl -o /tmp/jitsi-key.gpg.key \
+  https://download.jitsi.org/jitsi-key.gpg.key
+sudo gpg --dearmor \
+  -o /usr/share/keyrings/jitsi-keyring.gpg \
+  /tmp/jitsi-key.gpg.key
 
----
+echo 'deb [signed-by=/usr/share/keyrings/jitsi-keyring.gpg] \
+  https://download.jitsi.org stable/' | \
+  sudo tee /etc/apt/sources.list.d/jitsi-stable.list
 
-## 1. Preparació del servidor
+sudo apt update
+sudo apt install -y jitsi-meet
+```
 
-### 1.1 Descripció de la màquina
-
-La instància `innovatetech-media` (srv4) és el servidor dedicat
-als serveis multimèdia del projecte InnovateTech.
+Durant la instal·lació:
 
 | Paràmetre | Valor |
 |-----------|-------|
-| Nom | innovatetech-media |
-| Tipus EC2 | t2.medium |
-| RAM | 4 GB |
-| Disc | 15 GB gp3 |
-| Sistema operatiu | Ubuntu Server 22.04 LTS |
-| IP pública | 54.157.67.55 |
-| Regió AWS | eu-west-1 (Irlanda) |
+| Hostname | 54.157.67.55.sslip.io |
+| Certificat SSL | Generate a new self-signed certificate |
 
-![Instància EC2 en estat running](captures/01-ec2-running.png)
+### 4.4 Configuració SSL
 
-### 1.2 Usuari d'administració
-
-El projecte exigeix no utilitzar l'usuari per defecte (`ubuntu`).
-S'ha creat l'usuari específic `innovatech-admin` amb accés
-exclusivament per clau pública/privada.
+S'ha obtingut un certificat SSL real de Let's Encrypt mitjançant
+l'script oficial de Jitsi:
 
 ```bash
-sudo useradd -m -s /bin/bash innovatech-admin
-sudo usermod -aG sudo innovatech-admin
-sudo mkdir -p /home/innovatech-admin/.ssh
-sudo cp /home/ubuntu/.ssh/authorized_keys \
-  /home/innovatech-admin/.ssh/
-sudo chown -R innovatech-admin:innovatech-admin \
-  /home/innovatech-admin/.ssh
-sudo chmod 700 /home/innovatech-admin/.ssh
-sudo chmod 600 /home/innovatech-admin/.ssh/authorized_keys
-sudo passwd -l ubuntu
+sudo rm /etc/nginx/sites-enabled/default
+sudo systemctl restart nginx
+sudo /usr/share/jitsi-meet/scripts/install-letsencrypt-cert.sh
 ```
 
-![Connexió SSH amb innovatech-admin](captures/02-ssh-admin.png)
+### 4.5 Configuració NAT AWS
 
-### 1.3 Seguretat de xarxa
+Com que les instàncies EC2 utilitzen una IP privada interna
+darrere d'un NAT d'AWS, s'ha configurat el Jitsi Videobridge
+perquè els clients externs sàpiguen on enviar els fluxos:
 
-| Port | Protocol | Servei | Accessible des de |
-|------|----------|--------|-------------------|
-| 22 | TCP | SSH | IP de l'admin |
-| 8000 | TCP | Icecast2 | Internet |
-| 8080 | TCP | NGINX-RTMP HLS | Internet |
-| 1935 | TCP | RTMP | Internet |
-| 443 | TCP | Jitsi HTTPS | Internet |
-| 4443 | TCP | Jitsi Videobridge | Internet |
-| 10000 | UDP | Jitsi WebRTC | Internet |
+```bash
+sudo nano /etc/jitsi/videobridge/sip-communicator.properties
+```
 
-![Security Group AWS](captures/03-security-group.png)
-![UFW ports oberts](captures/04-ufw-status.png)
+```properties
+org.ice4j.ice.harvest.NAT_HARVESTER_LOCAL_ADDRESS=172.31.34.111
+org.ice4j.ice.harvest.NAT_HARVESTER_PUBLIC_ADDRESS=54.157.67.55
+```
+
+```bash
+# Fitxer /etc/jitsi/videobridge/config
+JVB_OPTS="--apis=rest,xmpp"
+```
+
+```bash
+sudo systemctl restart prosody jicofo jitsi-videobridge2 nginx
+```
+
+### 4.6 Verificació del servei
+
+```bash
+sudo systemctl status jitsi-videobridge2
+sudo systemctl status jicofo
+sudo systemctl status prosody
+```
+
+![Tres serveis Jitsi actius](captures/31-jitsi-serveis-actius.png)
+![Pàgina principal Jitsi Meet](captures/32-jitsi-web.png)
+![Videotrucada funcional amb 2 participants](captures/33-jitsi-videotrucada.png)
+
+### 4.7 Resolució d'incidències
+
+| # | Incidència | Causa | Solució |
+|---|-----------|-------|---------|
+| 1 | Let's Encrypt fallava amb error DNS | Domini `innovatetech.itb.cat` sense registre DNS públic | Utilitzar `sslip.io` com a DNS dinàmic invers |
+| 2 | Error 404 a la validació ACME | El virtual host per defecte d'Ubuntu interceptava les peticions | Eliminar `/etc/nginx/sites-enabled/default` i reiniciar NGINX |
+| 3 | Videobridge s'aturava constantment | Variable `JVB_OPTS` buida al fitxer de configuració | Afegir `JVB_OPTS="--apis=rest,xmpp"` al fitxer `/etc/jitsi/videobridge/config` |
+| 4 | Clients no podien connectar a la sala | NAT d'AWS no configurat al videobridge | Afegir les adreces local i pública al fitxer `sip-communicator.properties` |
+| 5 | Port 10000 UDP no accessible | Security Group d'AWS sense la regla UDP 10000 | Afegir regla UDP 10000 al Security Group |
+
+[↑ Tornar a l'índex](#índex)
 
 ---
 
-## 2. Servei d'àudio — Icecast2
+## 5. Proves d'amplada de banda
 
-### 2.1 Descripció del servei
+### 5.1 Objectiu
 
-Icecast2 és un servidor de streaming d'àudio de codi obert que
-permet distribuir contingut d'àudio en temps real a múltiples
-clients simultàniament. S'ha triat Icecast2 perquè és l'estàndard
-del sector per a streaming d'àudio en entorns empresarials, és
-lleuger en consum de recursos i permet configurar múltiples canals
-independents amb formats diferenciats.
+Verificar que la infraestructura desplegada és capaç de suportar
+els serveis d'àudio, vídeo i videoconferència sense degradació,
+mesurant velocitat de baixada, pujada i latència en dos escenaris.
 
-A InnovateTech s'utilitza per cobrir dues necessitats:
-- Distribució de contingut corporatiu intern en format MP3.
-- Emissions de sessions de formació interna en format OGG.
-
-### 2.2 Instal·lació
+### 5.2 Eines utilitzades
 
 ```bash
-sudo apt install icecast2 -y
+sudo apt install speedtest-cli nethogs -y
 ```
 
-Durant la instal·lació l'assistent demana:
+- **speedtest-cli**: mesura la velocitat de connexió amb
+  servidors de referència a internet.
+- **nethogs**: monitoritza el consum de bandwidth per procés
+  en temps real.
 
-| Paràmetre | Valor |
-|-----------|-------|
-| Hostname | audio.innovatetech.local |
-| Source password | @ITB2026 |
-| Relay password | @ITB2026 |
-| Admin password | @ITB2026 |
+**Requeriments mínims per servei:**
 
-![Assistent configuració Icecast2](captures/05-icecast2-assistent.png)
-![Icecast2 instal·lat](captures/06-icecast2-instalat.png)
+| Servei | Bandwidth mínim per client |
+|--------|---------------------------|
+| Streaming àudio MP3 128 kbps | 0.128 Mbit/s |
+| Streaming àudio OGG 96 kbps | 0.096 Mbit/s |
+| Streaming vídeo HLS 720p | 2.5 Mbit/s |
+| Videoconferència Jitsi 720p | 3 Mbit/s simètric |
 
-### 2.3 Configuració
-
-El fitxer de configuració principal és `/etc/icecast2/icecast.xml`.
-
-**Canals configurats:**
-
-| Canal | Muntatge | Format | Bitrate | Ús |
-|-------|----------|--------|---------|-----|
-| Corporatiu | `/corporate` | MP3 | 128 kbps | Comunicació interna |
-| Formació | `/formacio` | OGG Vorbis | 96 kbps | Sessions de formació |
-
-El canal `/corporate` utilitza MP3 perquè és el format d'àudio
-digital més universal, compatible amb qualsevol navegador i client.
-
-El canal `/formacio` utilitza OGG Vorbis perquè és un format
-lliure i obert que ofereix millor qualitat de so que MP3 al mateix
-bitrate, especialment en la reproducció de veu humana.
-
-![Fitxer de configuració icecast.xml](captures/07-icecast2-config.png)
-
-### 2.4 Font d'àudio amb ffmpeg
-
-Com que la instància EC2 no té targeta de so física, s'ha
-utilitzat ffmpeg com a font d'àudio virtual. Ffmpeg llegeix
-fitxers d'àudio pregravats i els publica en bucle continu
-a Icecast2, simulant una emissió en directe.
-
-Fitxers d'àudio preparats:
-- `corporate.mp3`: canal corporatiu, emès a 128 kbps en MP3.
-- `formacio.ogg`: canal de formació, emès a 96 kbps en OGG Vorbis.
-
-![Fitxers d'àudio al servidor](captures/08-audio-fitxers.png)
-
-S'han creat dos serveis systemd per garantir l'inici automàtic:
-
-```ini
-# /etc/systemd/system/icecast-corporate.service
-[Unit]
-Description=Icecast Stream Corporate MP3
-After=network.target icecast2.service
-
-[Service]
-ExecStart=/usr/bin/ffmpeg -re -stream_loop -1 \
-  -i /home/innovatech-admin/audio/corporate.mp3 \
-  -acodec libmp3lame -ab 128k -f mp3 \
-  icecast://source:@ITB2026@localhost:8000/corporate
-Restart=always
-RestartSec=5
-User=innovatech-admin
-
-[Install]
-WantedBy=multi-user.target
-```
-
-```ini
-# /etc/systemd/system/icecast-formacio.service
-[Unit]
-Description=Icecast Stream Formacio OGG
-After=network.target icecast2.service
-
-[Service]
-ExecStart=/usr/bin/ffmpeg -re -stream_loop -1 \
-  -i /home/innovatech-admin/audio/formacio.ogg \
-  -c:a libvorbis -b:a 96k \
-  -content_type application/ogg \
-  -f ogg \
-  icecast://source:@ITB2026@localhost:8000/formacio
-Restart=always
-RestartSec=5
-User=innovatech-admin
-
-[Install]
-WantedBy=multi-user.target
-```
-
-![Servei icecast-corporate actiu](captures/09-icecast-corporate-actiu.png)
-![Servei icecast-formacio actiu](captures/10-icecast-formacio-actiu.png)
-
-### 2.5 Verificació del servei
+### 5.3 Prova 1 — Servidor en repòs
 
 ```bash
-sudo systemctl status icecast2
-ss -tlnp | grep 8000
+speedtest-cli --simple
 ```
 
-![Servei Icecast2 actiu](captures/11-icecast2-actiu.png)
-![Port 8000 en estat LISTEN](captures/12-port-8000.png)
+| Mesura | Resultat |
+|--------|----------|
+| Ping | 5.255 ms |
+| Download | 956.00 Mbit/s |
+| Upload | 966.14 Mbit/s |
 
-**Verificació via interfície web:**
+![Speedtest servidor en repòs](captures/34-speedtest-repos.png)
 
-- Pàgina principal: `http://54.157.67.55:8000/`
-- Panell d'administració: `http://54.157.67.55:8000/admin/`
-- Llista de muntatges: `http://54.157.67.55:8000/admin/listmounts.xsl`
+### 5.4 Prova 2 — Servidor amb càrrega
 
-![Panell d'administració Icecast2](captures/13-icecast2-admin.png)
-![Muntatges actius](captures/14-icecast2-mountpoints.png)
+Amb clients connectats als dos canals d'Icecast2 simultàniament:
 
-**Verificació des de clients:**
+**Consum per procés (nethogs):**
 
-![Canal corporatiu MP3 al navegador](captures/15-navegador-corporate.png)
-![Canal formació OGG al navegador Firefox](captures/16-navegador-formacio.png)
-![VLC reproduint canal corporatiu](captures/17-vlc-corporate.png)
-![VLC reproduint canal formació OGG](captures/18-vlc-formacio.png)
+| Procés | Enviat | Rebut |
+|--------|--------|-------|
+| icecast2 | 23.479 KB/s | 1.057 KB/s |
+| sshd | 0.130 KB/s | 0.052 KB/s |
+| **TOTAL** | **23.609 KB/s** | **1.109 KB/s** |
 
-**Verificació Content-Type OGG:**
+![Nethogs consum per procés](captures/35-nethogs-carrega.png)
 
-```bash
-curl -v http://localhost:8000/formacio 2>&1 | grep "Content-Type"
-```
+**Resultats comparatius:**
 
-![Content-Type application/ogg verificat](captures/19-content-type-ogg.png)
+| Mesura | Repòs | Amb càrrega | Diferència |
+|--------|-------|-------------|------------|
+| Ping | 5.255 ms | 4.76 ms | -0.495 ms |
+| Download | 956.00 Mbit/s | 954.98 Mbit/s | -1.02 Mbit/s |
+| Upload | 966.14 Mbit/s | 968.25 Mbit/s | +2.11 Mbit/s |
 
-### 2.6 Resolució d'incidències
+![Speedtest servidor amb càrrega](captures/36-speedtest-carrega.png)
 
-| Incidència | Causa | Solució |
-|-----------|-------|---------|
-| Pàgina web no carregava des de fora | Port 8000 no obert al Security Group d'AWS | Afegir regla d'entrada al Security Group per al port 8000 TCP |
-| Serveis ffmpeg amb error `status=8` | Contrasenya incorrecta a la URL d'Icecast | Actualitzar la contrasenya `@ITB2026` als fitxers de servei |
-| Canal `/formacio` retornava `Content-Type: audio/mpeg` en lloc d'`application/ogg` | ffmpeg envia el Content-Type independentment del format real | Afegir el paràmetre `-content_type application/ogg` a la comanda ffmpeg |
-| Canal OGG no carregava al navegador Chrome | Chrome no suporta OGG nativament | Verificar amb Firefox que sí suporta OGG, i confirmar funcionament amb VLC |
+### 5.5 Anàlisi dels resultats
+
+La comparació entre les dues proves demostra que els serveis
+multimèdia tenen un impacte pràcticament nul sobre el rendiment
+de la xarxa. Les diferències entre les mesures en repòs i amb
+càrrega són inferiors a l'1%.
+
+| Servei | Consum per client | Capacitat upload | Clients suportats |
+|--------|------------------|-----------------|-------------------|
+| MP3 128 kbps | 0.128 Mbit/s | 968 Mbit/s | ~7.500 |
+| OGG 96 kbps | 0.096 Mbit/s | 968 Mbit/s | ~10.000 |
+| Vídeo HLS 720p | 2.5 Mbit/s | 968 Mbit/s | ~387 |
+| Jitsi 720p | 3 Mbit/s | 968 Mbit/s | ~322 |
+
+### 5.6 Conclusió tècnica
+
+La infraestructura desplegada a la instància EC2 `t2.medium`
+a la regió `eu-west-1` d'AWS disposa d'una amplada de banda
+molt superior als requeriments dels serveis multimèdia
+d'InnovateTech.
+
+| Criteri | Valor mínim | Valor obtingut | Estat |
+|---------|------------|----------------|-------|
+| Ping | < 50 ms | 4.76 ms | ✅ |
+| Download | > 10 Mbit/s | 954.98 Mbit/s | ✅ |
+| Upload | > 5 Mbit/s | 968.25 Mbit/s | ✅ |
+| Impacte dels serveis | < 10% | < 1% | ✅ |
+
+La infraestructura es classifica com a **ACCEPTABLE** per als
+casos d'ús definits. Si en un futur InnovateTech necessités
+escalar el servei a milers de clients simultanis, es recomana
+avaluar l'ús d'Amazon CloudFront com a CDN per a la distribució
+del contingut.
+
+[↑ Tornar a l'índex](#índex)
