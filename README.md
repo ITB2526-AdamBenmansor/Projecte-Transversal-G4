@@ -47,7 +47,7 @@ evitar que qualsevol persona pugui trobar o saber on es troba.
 
 **Vista de planta**
 
-![Vista de planta](imatges/planta.png)
+![Vista de planta](Captures_1.1/planta.png)
 
 **Vista de perfil**
 
