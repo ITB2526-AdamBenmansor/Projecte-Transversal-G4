@@ -417,7 +417,7 @@ http {
 }
 ```
 
-![Fitxer de configuració nginx.conf](captures/Bloc2-23.png)
+![Fitxer de configuració nginx.conf](captures/Bloc2-23.1.png)
 ![Fitxer de configuració nginx.conf](captures/Bloc2-23.5.png)
 
 ### 3.5 Servei systemd
