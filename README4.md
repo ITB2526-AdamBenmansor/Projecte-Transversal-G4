@@ -1,5 +1,94 @@
 # Projecte-Transversal
+# 🗄️ Bloc 0377 — Administració de Bases de Dades
+## InnovateTech · Documentació Tècnica de la Base de Dades
 
+> **Projecte Transversal ASIXc1 · Curs 2025/2026**  
+> Mòdul 0377 — Administració de Bases de Dades  
+> Institut Tecnològic de Barcelona
+
+---
+
+## 📋 Índex
+
+1. [Diagrama E/R i Model Relacional](#1-diagrama-er-i-model-relacional)
+2. [Instal·lació i Configuració de MariaDB](#2-installació-i-configuració-de-mariadb)
+3. [Creació de la Base de Dades i Taules](#3-creació-de-la-base-de-dades-i-taules)
+4. [Dades de Prova](#4-dades-de-prova)
+5. [Creació de Rols i Permisos](#5-creació-de-rols-i-permisos)
+6. [Script de Creació Automatitzada d'Usuaris](#6-script-de-creació-automatitzada-dusuaris)
+7. [Triggers de Control i Auditoria](#7-triggers-de-control-i-auditoria)
+8. [Event Periòdic de Backup](#8-event-periòdic-de-backup)
+9. [Conclusions](#9-conclusions)
+
+---
+
+## 1. Diagrama E/R i Model Relacional
+
+### 1.1 Diagrama Entitat-Relació
+
+El diagrama E/R representa totes les entitats, atributs i relacions de la base de dades d'InnovateTech. Les entitats s'han organitzat en 5 blocs funcionals: **Personal i Organització**, **Comunicació Interna**, **Contingut i Nòmines**, **Vendes i Clients** i **Auditoria i Sistema**.
+
+> 📸 **CAPTURA**: Diagrama E/R complet
+
+---
+
+### 1.2 Model Relacional
+
+A partir del diagrama E/R s'ha obtingut l'esquema relacional complet. Per a cada taula s'indica el nom, els atributs, la clau primària (PK) i les claus foranes (FK).
+
+#### Personal i Organització
+
+```
+DEPARTAMENT (cod_dept PK, nom, telefon)
+
+EMPLEAT (dni PK, nom, cognoms, adreca, telefon, cod_dept FK→DEPARTAMENT)
+
+GRUP_NIVELL (id_nivell PK, nom, salari_base)
+
+NOMINES (id_nomina PK, dni FK→EMPLEAT, id_nivell FK→GRUP_NIVELL, data_pagament, import)
+```
+
+#### Comunicació Interna
+
+```
+GRUP_QUALITAT (id_grup PK, nom, resolucio_video, bitrate_audio)
+
+USUARI (id_usuari PK, nom_complet, email, extensio, estat, tipus, 
+        dni FK→EMPLEAT, id_grup FK→GRUP_QUALITAT)
+
+TRUCADA (id_trucada PK, id_originador FK→USUARI, id_destinatari FK→USUARI, 
+         inici, fi, duracio, qualitat, puntuacio, comentari)
+```
+
+#### Contingut i Xarxa
+
+```
+VIDEO (id_video PK, titol, descripcio, categoria, duracio, data_publicacio, enllac)
+
+MESURA_BANDA (id_mesura PK, data_hora, id_operari FK→USUARI, 
+              baixada, pujada, latencia, resultat, notes)
+```
+
+#### Vendes i Clients
+
+```
+CLIENTS (id_client PK, nom, cognoms, email, telefon, adreca)
+
+PRODUCTES (id_producte PK, nom, descripcio, preu, estoc)
+
+COMANDES (id_comanda PK, id_client FK→CLIENTS, data_comanda, estat, total)
+
+CISTELL (id_cistell PK, id_client FK→CLIENTS, id_producte FK→PRODUCTES, 
+         quantitat, data_afegit)
+```
+
+#### Auditoria i Sistema
+
+```
+AVISOS (id_avis PK, usuari_bd, taula_afectada, operacio, data_hora, detall)
+
+CONTROL_BACKUP (id_backup PK, data_hora, taules_incloses, resultat)
+```
 ---
 
 ## 2. Instal·lació i Configuració de MariaDB
