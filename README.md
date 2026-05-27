@@ -1,33 +1,46 @@
-# 🏢 Memoria Técnica: Infraestructura de Redes y Sistemas
-**Proyecto Transversal - Grupo 4 (Innovate Tech)**
+# 🏢 Memòria Tècnica: Infraestructura de Xarxes i Sistemes
+**Projecte Transversal - Grup 4 (Innovate Tech)**
 
-**Integrantes:** Adam Benmansor, Leonel Coello, Oriol Coll, Victor Barreda.
-
----
-
-## 📌 1. Introducción
-En este documento explicamos de forma detallada cómo hemos diseñado, desplegado y configurado la infraestructura de red corporativa para nuestro Proyecto Transversal (Innovate Tech). 
-
-El objetivo principal de este proyecto no era simplemente encender máquinas virtuales, sino simular un entorno empresarial completo y realista utilizando **Amazon Web Services (AWS)**. Hemos priorizado la aplicación de buenas prácticas del sector, tales como la infraestructura como código (automatizando tareas repetitivas), la centralización del control de usuarios y auditoría, y la fortificación perimetral de los servidores. Para ello, hemos combinado de forma integral herramientas de alto nivel como Ansible, LDAP, DNS y OpenSSL.
-
-![key](captures-1/b1-01.png)
+**Integrants:** Adam Benmansor, Leonel Coello, Oriol Coll, Victor Barreda.
 
 ---
 
-## ☁️ 2. Despliegue de la Infraestructura en AWS
-La base física de nuestro proyecto se asienta sobre la nube de Amazon Web Services (AWS). En lugar de usar redes locales convencionales, aprovechamos el cloud computing para disponer de alta disponibilidad.
+## 📋 Índex de Continguts
+1. [Introducció](#-1-introducció)
+2. [Desplegament de la Infraestructura a AWS](#️-2-desplegament-de-la-infraestructura-a-aws)
+3. [Automatització de la Infraestructura amb Ansible](#-3-automatització-de-la-infraestructura-amb-ansible)
+4. [Servidor Central d'Identitats: LDAP](#-4-servidor-central-didentitats-ldap)
+5. [Integració del Client LDAP (SSSD) i SFTP Segur](#-5-integració-del-client-ldap-sssd-i-sftp-segur)
+6. [Auditoria i Centralització de Logs](#-6-auditoria-i-centralització-de-logs)
+7. [Integració Dinàmica: Instal·lació de PHP](#-7-integració-dinàmica-installació-de-php)
+8. [Resolució de Noms: Servidor DNS Intern](#-8-resolució-de-noms-servidor-dns-intern)
+9. [Integració Global al Domini (El Playbook Mestre)](#-9-integració-global-al-domini-el-playbook-mestre)
+10. [Fortificació Criptogràfica HTTPS (SSL)](#️-10-fortificació-criptogràfica-https-ssl)
+11. [Conclusió](#conclusió)
 
-* **Claves de Acceso:** Generamos un par de claves criptográficas (`innovate-tech-key`) de tipo RSA/ED25519. Este archivo `.pem` es nuestro pase de seguridad exclusivo; sin él, es imposible acceder a las terminales, mitigando así ataques de fuerza bruta.
-* **Security Groups (Firewall):** Siguiendo el principio de "mínimo privilegio", configuramos nuestro firewall de AWS para bloquear todo el tráfico externo por defecto. Solo permitimos el acceso a los puertos estrictamente necesarios (como el 22 para SSH desde nuestras IPs autorizadas, o el 80/443 para tráfico web). A nivel interno, habilitamos que todas las máquinas de nuestra VPC puedan comunicarse libremente entre sí.
+---
+
+## 📌 1. Introducció
+En aquest document expliquem de manera detallada com hem dissenyat, desplegat i configurat la infraestructura de xarxa corporativa per al nostre Projecte Transversal (Innovate Tech). 
+
+L'objectiu principal d'aquest projecte no era simplement encendre màquines virtuals, sinó simular un entorn empresarial complet i realista utilitzant **Amazon Web Services (AWS)**. Hem prioritzat l'aplicació de bones pràctiques del sector, com ara la infraestructura com a codi (automatitzant tasques repetitives), la centralització del control d'usuaris i auditoria, i la fortificació perimetral dels servidors. Per a això, hem combinat de manera integral eines d'alt nivell com Ansible, LDAP, DNS i OpenSSL.
+
+![keygen](captures-1/b1-01.png)
+
+---
+
+## ☁️ 2. Desplegament de la Infraestructura a AWS
+La base física del nostre projecte s'assenta sobre el núvol d'Amazon Web Services (AWS). En lloc d'utilitzar xarxes locals convencionals, aprofitem el *cloud computing* per disposar d'alta disponibilitat.
+
+* **Claus d'Accés:** Vam generar un parell de claus criptogràfiques (`innovate-tech-key`) de tipus RSA/ED25519. Aquest fitxer `.pem` és el nostre passi de seguretat exclusiu; sense ell, és impossible accedir a les terminals, mitigant així atacs de força bruta.
+* **Security Groups (Firewall):** Seguint el principi de "mínim privilegi", vam configurar el nostre tallafocs d'AWS per bloquejar tot el trànsit extern per defecte. Només permetem l'accés als ports estrictament necessaris (com el 22 per a SSH des de les nostres IPs autoritzades, o el 80/443 per a trànsit web). A nivell intern, vam habilitar que totes les màquines de la nostra VPC es puguin comunicar lliurement entre elles.
 
 ![rules](captures-1/b1-02.png)
 
-
-
-* Levantamos **5 servidores clave** (Instancias EC2) con Ubuntu, cada uno con un rol específico:
+* Vam aixecar **5 servidors clau** (Instàncies EC2) amb Ubuntu, cadascun amb un rol específic:
     * **Màquina 1: Servei Web - Apache / SFTP (Ansible)**
-    * **Màquina 2: LDAP** (y servidor de resolución DNS)
-    * **Màquina 3: Centralització de logs (Ansible)** (Nodo de control maestro)
+    * **Màquina 2: LDAP** (i servidor de resolució DNS)
+    * **Màquina 3: Centralització de logs (Ansible)** (Node de control mestre)
     * **Màquina 4: Servidor de Streaming**
     * **Màquina 5: Base de Dades (Maria DB)**
 
@@ -35,115 +48,95 @@ La base física de nuestro proyecto se asienta sobre la nube de Amazon Web Servi
 
 ---
 
-## 🤖 3. Automatización de la Infraestructura con Ansible
-En una empresa real, ir máquina por máquina instalando servicios a mano es ineficiente y muy propenso a errores humanos. Por ello, hemos implantado **Ansible** para centralizar la configuración mediante código (Infrastructure as Code).
+## 🤖 3. Automatització de la Infraestructura amb Ansible
+En una empresa real, anar màquina per màquina instal·lant serveis a mà és ineficient i molt propens a errors humans. Per això, hem implantat **Ansible** per centralitzar la configuració mitjançant codi (*Infrastructure as Code*).
 
-En la **Màquina 1**, me encargué de dar de alta al usuario `admin-itb` con permisos de administrador (sudo) y le configuré nuestras llaves SSH. Después, desde nuestra **Màquina 3** (el cerebro de Ansible), definimos el inventario de hosts e iniciamos la magia. Escribí y lancé nuestro primer Playbook (`mi_config.yml`). Este script se conectó por SSH a la Màquina 1, actualizó los paquetes del sistema e instaló Apache2 de forma totalmente desatendida y automática.
+A la **Màquina 1**, em vaig encarregar de donar d'alta l'usuari `admin-itb` amb permisos d'administrador (sudo) i li vaig configurar les nostres claus SSH. Després, des de la nostra **Màquina 3** (el cervell d'Ansible), vam definir l'inventari de hosts i vam iniciar la màgia. Vaig escriure i llançar el nostre primer Playbook (`mi_config.yml`). Aquest script es va connectar per SSH a la Màquina 1, va actualitzar els paquets del sistema i va instal·lar Apache2 de manera totalment desatesa i automàtica.
 
 ![asible ping](captures-1/b1-04.png)
 
 ![ansible playblook](captures-1/b1-05.png)
 
-
 ---
 
-## 🔐 4. Servidor Central de Identidades: LDAP
-Para evitar el caos administrativo de tener cuentas de usuario dispersas e independientes en cada servidor, implantamos un directorio activo utilizando el protocolo LDAP (Lightweight Directory Access Protocol) en la **Màquina 2**. 
+## 🔐 4. Servidor Central d'Identitats: LDAP
+Per evitar el caos administratiu de tenir comptes d'usuari dispersos i independents a cada servidor, vam implantar un directori actiu utilitzant el protocol LDAP (Lightweight Directory Access Protocol) a la **Màquina 2**. 
 
-Configuré nuestro propio árbol de dominio llamado `innovatetech.itb.cat`. Para poblar este directorio, inyecté en el servidor una serie de archivos de estructura `.ldif` para crear las unidades organizativas (OUs) de *grups* y *usuaris*. A modo de validación, creamos nuestro primer usuario corporativo 100% centralizado: `sftpuser`, asignándole un ID de grupo, un directorio *home* y su respectiva contraseña.
+Vaig configurar el nostre propi arbre de domini anomenat `innovatetech.itb.cat`. Per poblar aquest directori, vaig injectar al servidor una sèrie de fitxers d'estructura `.ldif` per crear les unitats organitzatives (OUs) de *grups* i *usuaris*. A tall de validació, vam crear el nostre primer usuari corporatiu 100% centralitzat: `sftpuser`, assignant-li un ID de grup, un directori *home* i la seva respectiva contrasenya.
 
 ![user ldif](captures-1/b1-06.png)
 
-
-
 ![ldapadd](captures-1/b1-07.png)
-
 
 ---
 
-## 📁 5. Integración del Cliente LDAP (SSSD) y SFTP Seguro
-El LDAP de la M2 es inútil si el resto de máquinas no saben cómo preguntarle quiénes son los usuarios. El siguiente paso fue vincular nuestro servidor web con esta base de identidades.
+## 📁 5. Integració del Client LDAP (SSSD) i SFTP Segur
+L'LDAP de la M2 és inútil si la resta de màquines no saben com preguntar-li qui són els usuaris. El següent pas va ser vincular el nostre servidor web amb aquesta base d'identitats.
 
-Instalé el demonio **SSSD** en la **Màquina 1** y lo configuré para que leyera e interpretara a los usuarios alojados en la Màquina 2 de forma transparente.
+Vaig instal·lar el dimoni **SSSD** a la **Màquina 1** i el vaig configurar perquè llegís i interpretés els usuaris allotjats a la Màquina 2 de manera transparent.
 
 ![getent](captures-1/b1-08.png)
 
-
-
-A continuación, implementamos un servicio de transferencia de archivos seguro (**SFTP**). Para garantizar que un usuario subcontratado o externo no pudiera cotillear los archivos críticos del sistema operativo Ubuntu, apliqué una política estricta de seguridad llamada **Chroot Jail** (`ChrootDirectory` en SSH). Esto "enjaula" al `sftpuser` cuando se conecta, limitando su visión exclusivamente a su carpeta asignada `/home/sftpuser/pujades`. Finalmente, modificamos el *DocumentRoot* de Apache para que cargase el contenido de esa misma carpeta de cara al público.
+A continuació, vam implementar un servei de transferència de fitxers segur (**SFTP**). Per garantir que un usuari subcontractat o extern no pogués tafanejar els fitxers crítics del sistema operatiu Ubuntu, vaig aplicar una política estricta de seguretat anomenada **Chroot Jail** (`ChrootDirectory` a SSH). Això "engabia" el `sftpuser` quan es connecta, limitant la seva visió exclusivament a la seva carpeta assignada `/home/sftpuser/pujades`. Finalment, vam modificar el *DocumentRoot* d'Apache perquè carregués el contingut d'aquesta mateixa carpeta de cara al públic.
 
 ![sftp](captures-1/b1-09.png)
 
-
 ![web](captures-1/b1-10.png)
-
 
 ---
 
-## 📡 6. Auditoría y Centralización de Logs
-La trazabilidad es clave en la ciberseguridad. Para evitar tener que acceder a 5 servidores distintos en busca de fallos o accesos no autorizados, configuramos la **Màquina 3** como nuestro SIEM (Gestor de eventos e información) básico.
+## 📡 6. Auditoria i Centralització de Logs
+La traçabilitat és clau en la ciberseguretat. Per evitar haver d'accedir a 5 servidors diferents a la recerca de fallades o accessos no autoritzats, vam configurar la **Màquina 3** com el nostre SIEM (Gestor d'esdeveniments i informació) bàsic.
 
-En la Màquina 3, descomenté los módulos `imudp` e `imtcp` en la configuración de `rsyslog` para que abriera el puerto 514 y escuchara el tráfico de red. Posteriormente, con un nuevo Playbook de Ansible (`configurar_logs.yml`), modifiqué de golpe la configuración interna de todos los demás servidores. La regla inyectada obligaba a cada máquina a enviar una copia en tiempo real de cualquier evento del sistema (errores, reinicios, logins) directamente a la Màquina 3. Ahora disponemos de un punto único de monitorización.
+A la Màquina 3, vaig descomentar els mòduls `imudp` i `imtcp` en la configuració de `rsyslog` perquè obrís el port 514 i escoltés el trànsit de xarxa. Posteriorment, amb un nou Playbook d'Ansible (`configurar_logs.yml`), vaig modificar de cop la configuració interna de tots els altres servidors. La regla injectada obligava cada màquina a enviar una còpia en temps real de qualsevol esdeveniment del sistema (errors, reinicis, inicis de sessió) directament a la Màquina 3. Ara disposem d'un punt únic de monitoratge.
 
 ![ansible playbook](captures-1/b1-11.png)
-
 
 ![grep slapd](captures-1/b1-12.png)
 
 ---
 
-## 🐘 7. Integración Dinámica: Instalación de PHP
-Para garantizar que nuestro portal no fuera solo una vitrina de HTML estático y tuviera el potencial de interactuar con aplicaciones modernas, doté a la infraestructura web de capacidades de procesamiento dinámico.
+## 🐘 7. Integració Dinàmica: Instal·lació de PHP
+Per garantir que el nostre portal no fos només un aparador d'HTML estàtic i tingués el potencial d'interactuar amb aplicacions modernes, vaig dotar la infraestructura web de capacitats de processament dinàmic.
 
-En el servidor web (**Màquina 1**), procedí a la instalación del motor **PHP** junto al paquete de enlace `php-mysql`. Esta librería es el puente vital que permitirá que cualquier aplicación web alojada en la M1 pueda consultar y escribir datos directamente en nuestra **Màquina 5: Base de Dades (Maria DB)**. Para verificar que el módulo se había cargado correctamente en Apache, generé un archivo de diagnóstico `info.php` que nos confirmó que el entorno de desarrollo estaba listo.
+Al servidor web (**Màquina 1**), vaig procedir a la instal·lació del motor **PHP** juntament amb el paquet d'enllaç `php-mysql`. Aquesta llibreria és el pont vital que permetrà que qualsevol aplicació web allotjada a la M1 pugui consultar i escriure dades directament a la nostra **Màquina 5: Base de Dades (Maria DB)**. Per verificar que el mòdul s'havia carregat correctament a Apache, vaig generar un fitxer de diagnòstic `info.php` que ens va confirmar que l'entorn de desenvolupament estava llest.
 
 ![php](captures-1/b1-19.png)
 
-
 ---
 
-## 🌍 8. Resolución de Nombres: Servidor DNS Interno
-En una red con múltiples servicios, memorizar e introducir direcciones IP públicas o privadas cada vez que las máquinas necesitan hablar entre ellas es inviable. Para solucionar este problema, montamos un servidor **DNS** autoritativo basado en `bind9` dentro de la **Màquina 2**. 
+## 🌍 8. Resolució de Noms: Servidor DNS Intern
+En una xarxa amb múltiples serveis, memoritzar i introduir adreces IP públiques o privades cada vegada que les màquines necessiten parlar entre elles és inviable. Per solucionar aquest problema, vam muntar un servidor **DNS** autoritatiu basat en `bind9` dins de la **Màquina 2**. 
 
-Definí un archivo de zona directa para el dominio privado `itb.local`. En ese archivo, vinculé nombres lógicos y descriptivos a cada nodo (`web`, `ldap`, `logs`, `stream`, `bd`) para que apuntaran a sus respectivas IPs privadas. Una vez la guía telefónica estuvo lista, programé otro Playbook de Ansible (`configurar_dns.yml`) que modificó el archivo `systemd-resolved` de todas las máquinas en segundos, obligándolas a consultar a la Màquina 2 para cualquier traducción de dominio.
+Vaig definir un fitxer de zona directa per al domini privat `itb.local`. En aquest fitxer, vaig vincular noms lògics i descriptius a cada node (`web`, `ldap`, `logs`, `stream`, `bd`) perquè apuntessin a les seves respectives IPs privades. Un cop la guia telefònica va estar llesta, vaig programar un altre Playbook d'Ansible (`configurar_dns.yml`) que va modificar el fitxer `systemd-resolved` de totes les màquines en segons, obligant-les a consultar a la Màquina 2 per a qualsevol traducció de domini.
 
 ![bind](captures-1/b1-13.png)
 
-
-
 ![ping](captures-1/b1-14.png)
-
-
 
 ---
 
-## 🔗 9. Integración Global al Dominio (El Playbook Maestro)
-Para consolidar la infraestructura de identidad, faltaba extender la configuración del SSSD a todas las terminales del proyecto. Preparé el Playbook maestro: `unir_dominio.yml`. 
+## 🔗 9. Integració Global al Domini (El Playbook Mestre)
+Per consolidar la infraestructura d'identitat, faltava estendre la configuració de l'SSSD a tots els terminals del projecte. Vaig preparar el Playbook mestre: `unir_dominio.yml`. 
 
-Con la sola pulsación del *Enter*, Ansible viajó simultáneamente a la **Màquina 1**, **Màquina 4** y **Màquina 5**, instaló los paquetes cliente de LDAP, inyectó la ruta de la M2 como autoridad de identificación y, como detalle técnico vital, activó el módulo `mkhomedir` mediante PAM. Esta funcionalidad asegura que cuando cualquier empleado registrado en LDAP inicia sesión por primera vez en un servidor, el sistema operativo le genera al instante su carpeta de trabajo personal.
+Amb la sola pulsació de l'*Enter*, Ansible va viatjar simultàniament a la **Màquina 1**, **Màquina 4** i **Màquina 5**, va instal·lar els paquets client de LDAP, va injectar la ruta de la M2 com a autoritat d'identificació i, com a detall tècnic vital, va activar el mòdul `mkhomedir` mitjançant PAM. Aquesta funcionalitat assegura que quan qualsevol empleat registrat a LDAP inicia sessió per primera vegada en un servidor, el sistema operatiu li genera a l'instant la seva carpeta de treball personal.
 
 ![ansible playblook](captures-1/b1-15.png)
 
-
 ---
 
-## 🛡️ 10. Fortificación Criptográfica HTTPS (SSL)
-El cierre técnico de nuestro despliegue fue la fortificación de la comunicación web. Desplegar servicios corporativos únicamente por HTTP (puerto 80) deja el tráfico vulnerable a escuchas o interceptaciones, por lo que necesitábamos activar el protocolo HTTPS (puerto 443).
+## 🛡️ 10. Fortificació Criptogràfica HTTPS (SSL)
+El tancament tècnic del nostre desplegament va ser la fortificació de la comunicació web. Desplegar serveis corporatius únicament per HTTP (port 80) deixa el trànsit vulnerable a escoltes o intercepcions, per la qual cosa necessitàvem activar el protocol HTTPS (port 443).
 
-Al tratar con un dominio privado (`web.itb.local`) inaccesible desde el internet global, las autoridades certificadoras comerciales no podían validarnos. Como administrador de sistemas, generé mi propio **certificado criptográfico autofirmado** (`web-itb.crt` y `.key`) haciendo uso del paquete criptográfico OpenSSL, empleando el robusto algoritmo RSA de 2048 bits. Finalmente, diseñé y habilité un nuevo archivo de bloque *VirtualHost* en Apache (`web-ssl.conf`) indicándole las rutas de las llaves, consiguiendo así que todas las comunicaciones de nuestro portal web estén cifradas de extremo a extremo.
+En tractar-se d'un domini privat (`web.itb.local`) inaccessible des de l'internet global, les autoritats certificadores comercials no ens podien validar. Com a administrador de sistemes, vaig generar el meu propi **certificat criptogràfic autosignat** (`web-itb.crt` i `.key`) fent ús del paquet criptogràfic OpenSSL, emprant el robust algorisme RSA de 2048 bits. Finalment, vaig dissenyar i habilitar un nou fitxer de bloc *VirtualHost* a Apache (`web-ssl.conf`) indicant-li les rutes de les claus, aconseguint així que totes les comunicacions del nostre portal web estiguin xifrades d'extrem a extrem.
 
 ![openssl](captures-1/b1-16.png)
 
-
-
 ![apache](captures-1/b1-17.png)
-
-
 
 ![certificat](captures-1/b1-18.png)
 
-
 ---
 
-**Conclusión**
-El desarrollo exhaustivo de este Proyecto Transversal nos ha servido para simular las problemáticas y arquitecturas reales de los entornos Cloud empresariales. La adopción de AWS nos proporcionó el escalado, Ansible redujo las horas de configuración manual a unos pocos segundos de ejecución, LDAP nos brindó el control absoluto sobre los accesos y la centralización del DNS y los logs simplificó enormemente el mantenimiento. Con la encriptación y los enjaulados SFTP añadidos, entregamos una arquitectura funcional, redundante y altamente fortificada.
+**Conclusió**
+El desenvolupament exhaustiu d'aquest Projecte Transversal ens ha servit per simular les problemàtiques i arquitectures reals dels entorns *Cloud* empresarials. L'adopció d'AWS ens va proporcionar l'escalat, Ansible va reduir les hores de configuració manual a uns pocs segons d'execució, LDAP ens va brindar el control absolut sobre els accessos i la centralización del DNS i els logs va simplificar enormement el manteniment. Amb l'encriptació i els engabiats SFTP afegits, entreguem una arquitectura funcional, redundant i altament fortificada.
