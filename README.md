@@ -18,10 +18,11 @@ La base física de nuestro proyecto se asienta sobre la nube de Amazon Web Servi
 * **Claves de Acceso:** Generamos un par de claves criptográficas (`innovate-tech-key`) de tipo RSA/ED25519. Este archivo `.pem` es nuestro pase de seguridad exclusivo; sin él, es imposible acceder a las terminales, mitigando así ataques de fuerza bruta.
 * **Security Groups (Firewall):** Siguiendo el principio de "mínimo privilegio", configuramos nuestro firewall de AWS para bloquear todo el tráfico externo por defecto. Solo permitimos el acceso a los puertos estrictamente necesarios (como el 22 para SSH desde nuestras IPs autorizadas, o el 80/443 para tráfico web). A nivel interno, habilitamos que todas las máquinas de nuestra VPC puedan comunicarse libremente entre sí.
 
-<img width="899" height="726" alt="image" src="https://github.com/user-attachments/assets/d234b774-4701-42c6-ae89-3c96f9de14af" />
+![Captura 1](captures-1/b1-01.png)
 
 
-<img width="1554" height="627" alt="image" src="https://github.com/user-attachments/assets/6c2219c2-e32a-406a-bf74-2c38219cf65f" />
+
+![Captura 2](captures-1/b1-02.png)
 
 * Levantamos **5 servidores clave** (Instancias EC2) con Ubuntu, cada uno con un rol específico:
     * **Màquina 1: Servei Web - Apache / SFTP (Ansible)**
