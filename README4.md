@@ -1,5 +1,5 @@
 # Projecte-Transversal
-# 🗄️ Bloc 0377 — Administració de Bases de Dades
+# Bloc 0377 — Administració de Bases de Dades
 ## InnovateTech · Documentació Tècnica de la Base de Dades
 
 > **Projecte Transversal ASIXc1 · Curs 2025/2026**  
@@ -8,7 +8,7 @@
 
 ---
 
-## 📋 Índex
+## Índex
 
 1. [Diagrama E/R i Model Relacional](#1-diagrama-er-i-model-relacional)
 2. [Instal·lació i Configuració de MariaDB](#2-installació-i-configuració-de-mariadb)
@@ -29,6 +29,8 @@
 El diagrama E/R representa totes les entitats, atributs i relacions de la base de dades d'InnovateTech. Les entitats s'han organitzat en 5 blocs funcionals: **Personal i Organització**, **Comunicació Interna**, **Contingut i Nòmines**, **Vendes i Clients** i **Auditoria i Sistema**.
 
 > 📸 **CAPTURA**: Diagrama E/R complet
+![Diagrama1](Captures4/Bloc4-Diagrama1.png)
+![Diagrama2](Captures4/Bloc4-Diagrama2.png)
 
 ---
 
@@ -111,7 +113,8 @@ sudo systemctl start mariadb
 sudo systemctl enable mariadb
 ```
 
-> 📸 **CAPTURA**: Posar aquí la captura del `systemctl status mariadb` mostrant active (running)
+
+![Status Mariadb](Captures4/Bloc4-statusmaria.png)
 
 ### 2.3 Configuració de seguretat
 
@@ -119,7 +122,8 @@ sudo systemctl enable mariadb
 sudo mysql_secure_installation
 ```
 
-> 📸 **CAPTURA**: Posar aquí la captura del `mysql_secure_installation`
+
+![Secure Mariadb](Captures4/Bloc4-seguridadmaria.png)
 
 ### 2.4 Accés a MariaDB
 
@@ -128,6 +132,7 @@ sudo mysql -u root -p
 ```
 
 > 📸 **CAPTURA**: Posar aquí la captura de l'accés a MariaDB
+![Entrar Mariadb](Captures4/Bloc4-entrarmaria.png)
 
 ---
 
@@ -143,6 +148,7 @@ USE innovatetech;
 ```
 
 > 📸 **CAPTURA**: Posar aquí la captura de la creació de la BD
+![Secure Mariadb](Captures4/Bloc4-createdatabase.png)
 
 ### 3.2 Creació de les taules
 
@@ -309,6 +315,7 @@ CREATE TABLE control_backup (
 ```
 
 > 📸 **CAPTURA**: Posar aquí la captura del `SHOW TABLES` amb les 15 taules
+![Secure Mariadb](Captures4/Bloc4-Showtables.png)
 
 ### 3.3 Verificació de l'estructura de les taules
 
@@ -319,12 +326,104 @@ DESCRIBE trucada;
 ```
 
 > 📸 **CAPTURA**: Posar aquí la captura dels DESCRIBE
+![Secure Mariadb](Captures4/Bloc4-Describe.png)
 
 ### 3.4 Dades de prova
 
 S'han inserit dades de prova a totes les taules per verificar el correcte funcionament de les relacions i les restriccions. Les dades simulen un entorn empresarial real amb empleats dels quatre departaments de l'empresa, clients externs, productes tecnològics i registres de trucades i mesures de banda.
 
-> 📸 **CAPTURA**: Posar aquí la captura dels INSERT
+### 3.5 Inserció de les dades
+
+```sql
+INSERT INTO departament (nom, telefon) VALUES
+('Vendes', '932001001'),
+('Suport Tècnic', '932001002'),
+('Administració', '932001003'),
+('Logística', '932001004');
+
+INSERT INTO grup_nivell (nom, salari_base) VALUES
+('Junior', 1500.00),
+('Senior', 2500.00),
+('Manager', 3500.00),
+('Director', 5000.00);
+
+INSERT INTO empleat (dni, nom, cognoms, adreca, telefon, cod_dept) VALUES
+('12345678A', 'Joan', 'Garcia López', 'Carrer Major 1, Barcelona', '600111222', 1),
+('87654321B', 'Maria', 'Pérez Ruiz', 'Av. Diagonal 5, Barcelona', '600333444', 2),
+('11223344C', 'Pere', 'Martínez Gil', 'Passeig Gràcia 10, Barcelona', '600555666', 3),
+('44332211D', 'Anna', 'López Fernández', 'Carrer Aragó 20, Barcelona', '600777888', 4),
+('55443322E', 'Lluís', 'Sánchez Torres', 'Gran Via 30, Barcelona', '600999000', 1);
+
+INSERT INTO grup_qualitat (nom, resolucio_video, bitrate_audio) VALUES
+('alta', '1080p', 320),
+('mitja', '720p', 192),
+('baixa', '480p', 96);
+
+INSERT INTO usuari (nom_complet, email, extensio, estat, tipus, dni, id_grup) VALUES
+('Joan Garcia López', 'joan@innovatetech.com', '101', 'actiu', 'intern', '12345678A', 1),
+('Maria Pérez Ruiz', 'maria@innovatetech.com', '102', 'actiu', 'intern', '87654321B', 2),
+('Pere Martínez Gil', 'pere@innovatetech.com', '103', 'actiu', 'intern', '11223344C', 1),
+('Anna López Fernández', 'anna@innovatetech.com', '104', 'bloquejat', 'intern', '44332211D', 3),
+('Lluís Sánchez Torres', 'lluis@innovatetech.com', '105', 'actiu', 'intern', '55443322E', 2),
+('Client Extern 1', 'client1@gmail.com', NULL, 'actiu', 'extern', NULL, 3),
+('Client Extern 2', 'client2@gmail.com', NULL, 'actiu', 'extern', NULL, 3);
+
+INSERT INTO nomines (dni, id_nivell, data_pagament, import) VALUES
+('12345678A', 2, '2026-05-01', 2500.00),
+('87654321B', 1, '2026-05-01', 1500.00),
+('11223344C', 3, '2026-05-01', 3500.00),
+('44332211D', 1, '2026-05-01', 1500.00),
+('55443322E', 2, '2026-05-01', 2500.00);
+
+INSERT INTO trucada (id_originador, id_destinatari, inici, fi, duracio, qualitat, puntuacio, comentari) VALUES
+(1, 2, '2026-05-01 10:00:00', '2026-05-01 10:30:00', 30, 'alta', 5, 'Molt bona qualitat'),
+(2, 3, '2026-05-02 11:00:00', '2026-05-02 11:15:00', 15, 'mitja', 4, 'Correcte'),
+(3, 1, '2026-05-03 09:00:00', '2026-05-03 09:45:00', 45, 'alta', 5, NULL),
+(1, 6, '2026-05-04 12:00:00', '2026-05-04 12:20:00', 20, 'baixa', 3, 'Qualitat acceptable'),
+(5, 7, '2026-05-05 15:00:00', '2026-05-05 15:10:00', 10, 'mitja', 4, NULL);
+
+INSERT INTO video (titol, descripcio, categoria, duracio, data_publicacio, enllac) VALUES
+('Introducció a la xarxa', 'Curs bàsic de xarxes', 'formació', 3600, '2026-01-10', 'http://streaming.innovatetech.com/video1.mp4'),
+('Seguretat informàtica', 'Bones pràctiques de seguretat', 'seguretat', 5400, '2026-02-15', 'http://streaming.innovatetech.com/video2.mp4'),
+('Configuració de servidors', 'Guia de configuració AWS', 'tècnic', 7200, '2026-03-20', 'http://streaming.innovatetech.com/video3.mp4'),
+('Gestió de bases de dades', 'MariaDB per a administradors', 'formació', 4800, '2026-04-01', 'http://streaming.innovatetech.com/video4.mp4');
+
+INSERT INTO clients (nom, cognoms, email, telefon, adreca) VALUES
+('Carlos', 'Rodríguez Pérez', 'carlos@gmail.com', '611222333', 'Carrer Nou 5, Barcelona'),
+('Laura', 'Gómez Martín', 'laura@gmail.com', '622333444', 'Av. Meridiana 10, Barcelona'),
+('Sergio', 'Fernández López', 'sergio@gmail.com', '633444555', 'Carrer Balmes 20, Barcelona');
+
+INSERT INTO productes (nom, descripcio, preu, estoc) VALUES
+('Servidor Dell R740', 'Servidor rack 2U', 3500.00, 10),
+('Switch Cisco 24p', 'Switch gestionable 24 ports', 800.00, 15),
+('Llicència Windows Server', 'Llicència anual', 500.00, 50),
+('Servei de suport tècnic', 'Suport mensual', 200.00, 100);
+
+INSERT INTO comandes (id_client, estat, total) VALUES
+(1, 'entregada', 3500.00),
+(2, 'pendent', 800.00),
+(3, 'enviada', 700.00);
+
+INSERT INTO cistell (id_client, id_producte, quantitat) VALUES
+(1, 1, 1),
+(2, 2, 2),
+(3, 3, 1),
+(1, 4, 3);
+
+INSERT INTO mesura_banda (id_operari, baixada, pujada, latencia, resultat, notes) VALUES
+(1, 150.50, 80.25, 12.30, 'acceptable', 'Mesura matinal'),
+(2, 95.30, 45.10, 25.60, 'acceptable', 'Mesura tarda'),
+(3, 30.20, 15.50, 85.20, 'no acceptable', 'Latència molt alta'),
+(1, 200.00, 100.00, 8.50, 'acceptable', 'Mesura nit');
+
+INSERT INTO avisos (usuari_bd, taula_afectada, operacio, detall) VALUES
+('joan@innovatetech.com', 'empleat', 'UPDATE', 'Intent de modificació no autoritzat'),
+('lluis@innovatetech.com', 'trucada', 'INSERT', 'Quota diària assolida');
+
+INSERT INTO control_backup (taules_incloses, resultat) VALUES
+('empleat, usuari, trucada', 'ok'),
+('empleat, usuari, trucada, video', 'ok');
+```
 
 Verificació de les dades inserides:
 
@@ -337,7 +436,7 @@ SELECT * FROM video;
 SELECT * FROM mesura_banda;
 ```
 
-> 📸 **CAPTURA**: Posar aquí la captura dels SELECT amb les dades
+![Secure Mariadb](Captures4/Bloc4-Select.png)
 
 ---
 
@@ -354,7 +453,7 @@ CREATE ROLE 'administracio';
 CREATE ROLE 'treballador';
 ```
 
-> 📸 **CAPTURA**: Posar aquí la captura de la creació dels rols
+
 
 ### 4.2 Assignació de permisos
 
@@ -365,7 +464,7 @@ GRANT ALL PRIVILEGES ON innovatetech.* TO 'admin';
 GRANT FILE ON *.* TO 'admin';
 ```
 
-> 📸 **CAPTURA**: Posar aquí la captura del GRANT admin
+
 
 **Rol vendes** — Pot gestionar clients, comandes, productes, cistell i trucades:
 
@@ -377,7 +476,7 @@ GRANT SELECT, INSERT, UPDATE ON innovatetech.cistell TO 'vendes';
 GRANT SELECT, INSERT, UPDATE ON innovatetech.trucada TO 'vendes';
 ```
 
-> 📸 **CAPTURA**: Posar aquí la captura del GRANT vendes
+
 
 **Rol administracio** — Pot gestionar personal, nòmines i departaments. No pot accedir al sistema de trucades de clients:
 
@@ -388,7 +487,7 @@ GRANT SELECT, INSERT, UPDATE ON innovatetech.departament TO 'administracio';
 GRANT SELECT, INSERT, UPDATE ON innovatetech.grup_nivell TO 'administracio';
 ```
 
-> 📸 **CAPTURA**: Posar aquí la captura del GRANT administracio
+
 
 **Rol treballador** — Pot consultar productes, vídeos i configuració. Pot registrar trucades pròpies. No pot modificar dades de personal ni clients:
 
@@ -399,7 +498,7 @@ GRANT SELECT ON innovatetech.grup_qualitat TO 'treballador';
 GRANT INSERT ON innovatetech.trucada TO 'treballador';
 ```
 
-> 📸 **CAPTURA**: Posar aquí la captura del GRANT treballador
+
 
 ---
 
@@ -456,7 +555,7 @@ for r in "${ROLS_VALIDS[@]}"; do
 done
 
 if [ "$ROL_VALID" == "false" ]; then
-  echo "❌ Rol no vàlid. Rols acceptats: admin, vendes, administracio, treballador"
+  echo "Rol no vàlid. Rols acceptats: admin, vendes, administracio, treballador"
   exit 1
 fi
 
@@ -465,7 +564,7 @@ EXISTEIX=$(mysql -u$DB_USER -p$DB_PASS -se \
   "SELECT COUNT(*) FROM mysql.user WHERE user='$NOM' AND host='$HOST';" 2>/dev/null)
 
 if [ "$EXISTEIX" -gt 0 ]; then
-  echo "❌ L'usuari '$NOM'@'$HOST' ja existeix."
+  echo "L'usuari '$NOM'@'$HOST' ja existeix."
   exit 1
 fi
 
@@ -478,25 +577,29 @@ FLUSH PRIVILEGES;"
 # Executar
 echo -e "$SQL" | mysql -u$DB_USER -p$DB_PASS 2>/dev/null
 if [ $? -eq 0 ]; then
-  echo "✅ Usuari '$NOM' creat amb rol '$ROL'"
+  echo "Usuari '$NOM' creat amb rol '$ROL'"
   echo -e "$SQL" >> $OUTPUT_FILE
-  echo "📄 SQL guardat a $OUTPUT_FILE"
+  echo "SQL guardat a $OUTPUT_FILE"
 else
-  echo "❌ Error en crear l'usuari"
+  echo "Error en crear l'usuari"
 fi
 ```
 
-> 📸 **CAPTURA**: Posar aquí la captura del nano amb el codi del script
+![Secure Mariadb](Captures4/Bloc4-CreacioUsuari.png)
 
 ### 5.4 Comprovació
 
-> 📸 **CAPTURA**: Posar aquí la captura de l'execució del script creant l'usuari `prova_vendes`
+![Secure Mariadb](Captures4/Bloc4-CreacioUsuari2.png)
 
-> 📸 **CAPTURA**: Posar aquí la captura del `SELECT user, host FROM mysql.user` mostrant el nou usuari
+![Secure Mariadb](Captures4/Bloc4-CreacioUsuari3.png)
 
 ---
 
-## 6. Triggers
+## 6. Triggers de Control i Auditoria
+
+S'han implementat **5 triggers** que donen suport a la seguretat i auditoria de la base de dades. Tots els triggers s'executen **abans** de la inserció o modificació (`BEFORE`) per poder bloquejar l'operació si cal.
+
+---
 
 ### 6.1 Trigger — Quota diària de trucades
 
@@ -530,7 +633,15 @@ END$$
 DELIMITER ;
 ```
 
-> 📸 **CAPTURA**: Posar aquí la captura de la creació del trigger
+**Comprovació:** S'intenta inserir més de 20 trucades en un dia amb el mateix usuari. El trigger bloqueja la inserció i retorna un error.
+
+```sql
+INSERT INTO trucada (id_originador, id_destinatari, inici, fi, duracio, qualitat)
+VALUES (2, 3, NOW(), NOW(), 1, 'alta');
+-- Repetit 21 vegades fins que surt l'error
+```
+
+> 📸 **CAPTURA**: Error `Quota diaria de trucades assolida`
 
 ---
 
@@ -574,7 +685,14 @@ END$$
 DELIMITER ;
 ```
 
-> 📸 **CAPTURA**: Posar aquí la captura de la creació del trigger
+**Comprovació:** S'intenta inserir una trucada de 99999 minuts per superar el límit mensual. El trigger bloqueja la inserció i retorna un error.
+
+```sql
+INSERT INTO trucada (id_originador, id_destinatari, inici, fi, duracio, qualitat)
+VALUES (1, 2, NOW(), NOW(), 99999, 'alta');
+```
+
+> 📸 **CAPTURA**: Error `Quota mensual de trucades assolida`
 
 ---
 
@@ -614,7 +732,14 @@ END$$
 DELIMITER ;
 ```
 
-> 📸 **CAPTURA**: Posar aquí la captura de la creació del trigger
+**Comprovació:** S'intenta inserir una trucada amb l'usuari Anna (id=4) que té estat `bloquejat`. El trigger bloqueja la inserció i retorna un error.
+
+```sql
+INSERT INTO trucada (id_originador, id_destinatari, inici, fi, duracio, qualitat)
+VALUES (4, 1, NOW(), NOW(), 10, 'alta');
+```
+
+> 📸 **CAPTURA**: Error `Usuari originador bloquejat`
 
 ---
 
@@ -651,7 +776,13 @@ END$$
 DELIMITER ;
 ```
 
-> 📸 **CAPTURA**: Posar aquí la captura de la creació del trigger
+**Comprovació:** La comprovació d'aquest trigger queda evidenciada a la taula `avisos`. Quan un usuari amb rol `vendes` intenta modificar `nomines`, MariaDB ja ho bloqueja a nivell de permisos de rol, afegint una capa extra de seguretat.
+
+```sql
+SELECT * FROM avisos;
+```
+
+> 📸 **CAPTURA**: `SELECT * FROM avisos` mostrant els registres d'auditoria
 
 ---
 
@@ -688,13 +819,23 @@ END$$
 DELIMITER ;
 ```
 
-> 📸 **CAPTURA**: Posar aquí la captura de la creació del trigger
+**Comprovació:** De la mateixa manera que el trigger anterior, queda evidenciat a la taula `avisos`. El sistema de doble protecció (permisos + trigger) garanteix que cap accés no autoritzat passi desapercebut.
+
+```sql
+SELECT * FROM avisos;
+```
+
+> 📸 **CAPTURA**: `SELECT * FROM avisos` mostrant tots els registres d'auditoria
+
+---
 
 ### 6.6 Verificació de tots els triggers
 
 ```sql
 SHOW TRIGGERS;
 ```
+
+> 📸 **CAPTURA**: `SHOW TRIGGERS` mostrant els 5 triggers creats i actius
 
 > 📸 **CAPTURA**: Posar aquí la captura del SHOW TRIGGERS amb els 5 triggers
 
