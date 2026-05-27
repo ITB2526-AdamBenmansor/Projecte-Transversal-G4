@@ -510,10 +510,9 @@ aplicables a una sala de servidors:
   barra antipànic per facilitar l'evacuació ràpida.
 - **Extintors:** un extintor de CO₂ situat a prop de la porta d'entrada, adequat
   per a focs elèctrics sense deixar residus als equips.
-
-  [↑ Tornar a l'índex](#Índex)
-
 - **Terra antilliscant:** el terra tècnic té acabat antilliscant per evitar caigudes
   durant les tasques de manteniment.
 - **Gestió del cablejat:** tot el cablejat està ordenat i recollit per evitar
   ensopegades durant els treballs a l'interior de la sala.
+
+    [↑ Tornar a l'índex](#Índex)
