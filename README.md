@@ -666,8 +666,8 @@ sudo systemctl status prosody
 ```
 
 ![Tres serveis Jitsi actius](captures/Bloc2-31.png)
-![Pàgina principal Jitsi Meet](captures/32-jitsi-web.png)
-![Videotrucada funcional amb 2 participants](captures/33-jitsi-videotrucada.png)
+![Pàgina principal Jitsi Meet](captures/Bloc2-32.png)
+![Videotrucada funcional amb 2 participants](captures/Bloc2-33.png)
 
 ### 4.7 Resolució d'incidències
 
@@ -719,49 +719,47 @@ speedtest-cli --simple
 
 | Mesura | Resultat |
 |--------|----------|
-| Ping | 5.255 ms |
-| Download | 956.00 Mbit/s |
-| Upload | 966.14 Mbit/s |
+| Ping | 2.06 ms |
+| Download | 802.43 Mbit/s |
+| Upload | 751.65 Mbit/s |
 
-![Speedtest servidor en repòs](captures/34-speedtest-repos.png)
+![Speedtest servidor en repòs](captures/Bloc2-34.png)
 
 ### 5.4 Prova 2 — Servidor amb càrrega
 
-Amb clients connectats als dos canals d'Icecast2 simultàniament:
+Amb clients connectats als dos canals d'Icecast2 i un client connectat al reproductor de video al navegador:
 
-**Consum per procés (nethogs):**
+| Mesura | Resultat |
+|--------|----------|
+| Ping | 5.821 ms |
+| Download | 800.46 Mbit/s |
+| Upload | 781.60 Mbit/s |
 
-| Procés | Enviat | Rebut |
-|--------|--------|-------|
-| icecast2 | 23.479 KB/s | 1.057 KB/s |
-| sshd | 0.130 KB/s | 0.052 KB/s |
-| **TOTAL** | **23.609 KB/s** | **1.109 KB/s** |
-
-![Nethogs consum per procés](captures/35-nethogs-carrega.png)
+![Nethogs consum per procés](captures/Bloc2-35.png)
 
 **Resultats comparatius:**
 
 | Mesura | Repòs | Amb càrrega | Diferència |
 |--------|-------|-------------|------------|
-| Ping | 5.255 ms | 4.76 ms | -0.495 ms |
-| Download | 956.00 Mbit/s | 954.98 Mbit/s | -1.02 Mbit/s |
-| Upload | 966.14 Mbit/s | 968.25 Mbit/s | +2.11 Mbit/s |
-
-![Speedtest servidor amb càrrega](captures/36-speedtest-carrega.png)
+| Ping | 2.06 ms | 5.821 ms | +3.761 ms |
+| Download | 802.43 Mbit/s | 800.46 Mbit/s | -1.97 Mbit/s |
+| Upload | 751.65 Mbit/s | 781.60 Mbit/s | +29.95 Mbit/s |
 
 ### 5.5 Anàlisi dels resultats
 
 La comparació entre les dues proves demostra que els serveis
 multimèdia tenen un impacte pràcticament nul sobre el rendiment
 de la xarxa. Les diferències entre les mesures en repòs i amb
-càrrega són inferiors a l'1%.
+càrrega són inferiors a l'0.3%.
 
-| Servei | Consum per client | Capacitat upload | Clients suportats |
-|--------|------------------|-----------------|-------------------|
-| MP3 128 kbps | 0.128 Mbit/s | 968 Mbit/s | ~7.500 |
-| OGG 96 kbps | 0.096 Mbit/s | 968 Mbit/s | ~10.000 |
-| Vídeo HLS 720p | 2.5 Mbit/s | 968 Mbit/s | ~387 |
-| Jitsi 720p | 3 Mbit/s | 968 Mbit/s | ~322 |
+**Relació amb els serveis multimèdia**
+
+| Servei | Consum per client | Upload disponible | Clients suportats |
+|--------|-------|-------------|------------|
+| Àudio MP3 128 kpbs | 0.128 Mbit/s | 751 Mbit/s | ~5.800 |
+| Àudio OGG 96 kbps | 0.096 Mbit/s | 751 Mbit/s | ~7.800 |
+| Vídeo HLS 720p | 2.5 Mbit/s | 751 Mbit/s | ~300 |
+| Jitsi Meet 720p | 3 Mbit/s simètric | 751 Mbit/s | ~250 |
 
 ### 5.6 Conclusió tècnica
 
@@ -772,9 +770,9 @@ d'InnovateTech.
 
 | Criteri | Valor mínim | Valor obtingut | Estat |
 |---------|------------|----------------|-------|
-| Ping | < 50 ms | 4.76 ms | ✅ |
-| Download | > 10 Mbit/s | 954.98 Mbit/s | ✅ |
-| Upload | > 5 Mbit/s | 968.25 Mbit/s | ✅ |
+| Ping | < 50 ms | 5.821 ms | ✅ |
+| Download | > 10 Mbit/s | 800.46 Mbit/s | ✅ |
+| Upload | > 5 Mbit/s | 751.65 Mbit/s | ✅ |
 | Impacte dels serveis | < 10% | < 1% | ✅ |
 
 La infraestructura es classifica com a **ACCEPTABLE** per als
