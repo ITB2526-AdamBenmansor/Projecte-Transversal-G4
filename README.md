@@ -252,9 +252,7 @@ ss -tlnp | grep 8000
 ![Panell d'administració Icecast2](captures/Bloc2-13.png)
 ![Muntatges actius amb els dos canals](captures/Bloc2-14.png)
 
-**Verificació Content-Type OGG:**
-
-```bash
+**Verificació Content-Type OGG:**```bash
 curl -v http://localhost:8000/formacio 2>&1 | grep "Content-Type"
 ```
 
@@ -262,10 +260,10 @@ curl -v http://localhost:8000/formacio 2>&1 | grep "Content-Type"
 
 **Verificació des de clients:**
 
-![Canal corporatiu MP3 reproduint al navegador](captures/16-navegador-corporate.png)
-![Canal formació OGG reproduint a Firefox](captures/17-navegador-formacio.png)
-![VLC reproduint canal corporatiu](captures/18-vlc-corporate.png)
-![VLC reproduint canal formació OGG](captures/19-vlc-formacio.png)
+![Canal corporatiu MP3 reproduint al navegador](captures/Bloc2-16.png)
+![Canal formació OGG reproduint a Firefox](captures/Bloc2-17.png)
+![VLC reproduint canal corporatiu](captures/Bloc2-18.png)
+![VLC reproduint canal formació OGG](captures/Bloc2-19.png)
 
 ### 2.6 Resolució d'incidències
 
