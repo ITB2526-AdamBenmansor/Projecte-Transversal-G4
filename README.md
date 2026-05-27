@@ -1,4 +1,4 @@
-# Bloc 1 — Infraestructura de Xarxes i Sistemes
+# Bloc 1.2 — Infraestructura de Xarxes i Sistemes
 **Projecte Transversal - Grup 4 (Innovate Tech)**
 
 **Integrants:** Adam Benmansor, Leonel Coello, Oriol Coll, Victor Barreda.
