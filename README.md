@@ -385,7 +385,7 @@ http {
     default_type application/octet-stream;
 
     server {
-        listen 0.0.0.0:8080;
+        listen 172.31.34.111:8080;
         server_name video.innovatetech.local;
 
         location /hls {
