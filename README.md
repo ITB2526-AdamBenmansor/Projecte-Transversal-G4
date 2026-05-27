@@ -97,7 +97,7 @@ Para garantizar que nuestro portal no fuera solo una vitrina de HTML estático y
 
 En el servidor web (**Màquina 1**), procedí a la instalación del motor **PHP** junto al paquete de enlace `php-mysql`. Esta librería es el puente vital que permitirá que cualquier aplicación web alojada en la M1 pueda consultar y escribir datos directamente en nuestra **Màquina 5: Base de Dades (Maria DB)**. Para verificar que el módulo se había cargado correctamente en Apache, generé un archivo de diagnóstico `info.php` que nos confirmó que el entorno de desarrollo estaba listo.
 
-![php](captures-1/b1-11.png)
+![php](captures-1/b1-19.png)
 
 
 ---
