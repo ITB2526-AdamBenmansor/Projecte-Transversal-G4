@@ -313,8 +313,8 @@ tràfic de videovigilància.
 
 ### 1.6.2. Esquema Visual
 
-![Esquema xarxa](Captures_1.1/VLAN1.png)
-![Esquema xarxa](Captures_1.1/VLAN2.png)
+![Esquema xarxa](Captures_1.1/esquema_xarxa.png)
+
 ---
 
 ### 1.6.3. Elements de la xarxa
