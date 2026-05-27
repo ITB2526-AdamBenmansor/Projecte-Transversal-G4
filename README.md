@@ -446,7 +446,7 @@ sudo systemctl enable nginx-rtmp
 sudo systemctl start nginx-rtmp
 ```
 
-![Servei nginx-rtmp actiu](captures/24-nginx-rtmp-actiu.png)
+![Servei nginx-rtmp actiu](captures/Bloc2-24.png)
 
 ### 3.6 Font de vídeo amb ffmpeg
 
@@ -481,8 +481,8 @@ User=innovatech-admin
 WantedBy=multi-user.target
 ```
 
-![Vídeo descarregat al servidor](captures/25-video-descarregat.png)
-![Segments HLS generats a /tmp/hls](captures/26-hls-segments.png)
+![Vídeo descarregat al servidor](captures/Bloc2-25.png)
+![Segments HLS generats a /tmp/hls](captures/Bloc2-26.png)
 
 ### 3.7 Reproductor web
 
@@ -543,10 +543,10 @@ sudo systemctl status nginx-stream
 ss -tlnp | grep -E "1935|8080"
 ```
 
-![Serveis nginx-rtmp i nginx-stream actius](captures/27-nginx-serveis-actius.png)
-![Ports 1935 i 8080 escoltant](captures/28-nginx-ports.png)
-![Reproductor web amb vídeo actiu](captures/29-nginx-web-reproductor.png)
-![VLC reproduint stream HLS](captures/30-vlc-video.png)
+![Serveis nginx-rtmp i nginx-stream actius](captures/Bloc2-27.png)
+![Ports 1935 i 8080 escoltant](captures/Bloc2-28.png)
+![Reproductor web amb vídeo actiu](captures/Bloc2-29.png)
+![VLC reproduint stream HLS](captures/Bloc2-30.png)
 
 ### 3.9 Resolució d'incidències
 
@@ -665,7 +665,7 @@ sudo systemctl status jicofo
 sudo systemctl status prosody
 ```
 
-![Tres serveis Jitsi actius](captures/31-jitsi-serveis-actius.png)
+![Tres serveis Jitsi actius](captures/Bloc2-31.png)
 ![Pàgina principal Jitsi Meet](captures/32-jitsi-web.png)
 ![Videotrucada funcional amb 2 participants](captures/33-jitsi-videotrucada.png)
 
