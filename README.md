@@ -25,7 +25,6 @@ En aquest document expliquem de manera detallada com hem dissenyat, desplegat i 
 
 L'objectiu principal d'aquest projecte no era simplement encendre màquines virtuals, sinó simular un entorn empresarial complet i realista utilitzant **Amazon Web Services (AWS)**. Hem prioritzat l'aplicació de bones pràctiques del sector, com ara la infraestructura com a codi (automatitzant tasques repetitives), la centralització del control d'usuaris i auditoria, i la fortificació perimetral dels servidors. Per a això, hem combinat de manera integral eines d'alt nivell com Ansible, LDAP, DNS i OpenSSL.
 
-![keygen](captures-1/b1-01.png)
 
 ---
 
@@ -34,6 +33,8 @@ La base física del nostre projecte s'assenta sobre el núvol d'Amazon Web Servi
 
 * **Claus d'Accés:** Vam generar un parell de claus criptogràfiques (`innovate-tech-key`) de tipus RSA/ED25519. Aquest fitxer `.pem` és el nostre passi de seguretat exclusiu; sense ell, és impossible accedir a les terminals, mitigant així atacs de força bruta.
 * **Security Groups (Firewall):** Seguint el principi de "mínim privilegi", vam configurar el nostre tallafocs d'AWS per bloquejar tot el trànsit extern per defecte. Només permetem l'accés als ports estrictament necessaris (com el 22 per a SSH des de les nostres IPs autoritzades, o el 80/443 per a trànsit web). A nivell intern, vam habilitar que totes les màquines de la nostra VPC es puguin comunicar lliurement entre elles.
+
+![keygen](captures-1/b1-01.png)
 
 ![rules](captures-1/b1-02.png)
 
