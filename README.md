@@ -319,7 +319,7 @@ sudo apt install -y build-essential libpcre3 libpcre3-dev \
 - `zlib1g-dev`: biblioteca de compressió per a gzip.
 - `git`: per descarregar el mòdul RTMP de GitHub.
 
-![Dependències instal·lades](captures/20-nginx-deps.png)
+![Dependències instal·lades](captures/Bloc2-20.png)
 
 ### 3.3 Descàrrega i compilació
 
@@ -345,8 +345,8 @@ Paràmetres de compilació:
 - `--with-http_mp4_module`: suport seek en fitxers MP4.
 - `--add-module=/tmp/nginx-rtmp-module`: mòdul RTMP.
 
-![NGINX i mòdul RTMP descarregats](captures/21-nginx-descarregat.png)
-![NGINX compilat correctament](captures/22-nginx-compilat.png)
+![NGINX i mòdul RTMP descarregats](captures/Bloc2-21.png)
+![NGINX compilat correctament](captures/Bloc2-22.png)
 
 ### 3.4 Configuració
 
@@ -417,7 +417,8 @@ http {
 }
 ```
 
-![Fitxer de configuració nginx.conf](captures/23-nginx-config.png)
+![Fitxer de configuració nginx.conf](captures/Bloc2-23.png)
+![Fitxer de configuració nginx.conf](captures/Bloc2-23.5.png)
 
 ### 3.5 Servei systemd
 
