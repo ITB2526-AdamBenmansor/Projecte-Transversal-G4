@@ -252,7 +252,9 @@ ss -tlnp | grep 8000
 ![Panell d'administració Icecast2](captures/Bloc2-13.png)
 ![Muntatges actius amb els dos canals](captures/Bloc2-14.png)
 
-**Verificació Content-Type OGG:**```bash
+**Verificació Content-Type OGG:**
+
+```bash
 curl -v http://localhost:8000/formacio 2>&1 | grep "Content-Type"
 ```
 
