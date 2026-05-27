@@ -328,11 +328,11 @@ DESCRIBE trucada;
 > 📸 **CAPTURA**: Posar aquí la captura dels DESCRIBE
 ![Secure Mariadb](Captures4/Bloc4-Describe.png)
 
-### 3.4 Dades de prova
+### 4. Dades de prova
 
 S'han inserit dades de prova a totes les taules per verificar el correcte funcionament de les relacions i les restriccions. Les dades simulen un entorn empresarial real amb empleats dels quatre departaments de l'empresa, clients externs, productes tecnològics i registres de trucades i mesures de banda.
 
-### 3.5 Inserció de les dades
+### 4.1 Inserció de les dades
 
 ```sql
 INSERT INTO departament (nom, telefon) VALUES
@@ -440,9 +440,9 @@ SELECT * FROM mesura_banda;
 
 ---
 
-## 4. Creació de Rols i Permisos
+## 5. Creació de Rols i Permisos
 
-### 4.1 Creació dels rols
+### 5.1 Creació dels rols
 
 S'han creat 4 rols seguint les indicacions del document del projecte:
 
@@ -455,7 +455,7 @@ CREATE ROLE 'treballador';
 
 
 
-### 4.2 Assignació de permisos
+### 5.2 Assignació de permisos
 
 **Rol admin** — Accés total a totes les taules i permisos especials de fitxers:
 
@@ -502,13 +502,13 @@ GRANT INSERT ON innovatetech.trucada TO 'treballador';
 
 ---
 
-## 5. Script de Creació Automatitzada d'Usuaris
+## 6. Script de Creació Automatitzada d'Usuaris
 
-### 5.1 Descripció general
+### 6.1 Descripció general
 
 El script `crear_usuari.sh` és un script en Bash que automatitza la creació d'usuaris a la base de dades MariaDB d'InnovateTech. L'objectiu és simplificar la tasca de l'administrador, evitar errors manuals i garantir que cada usuari té el rol correcte assignat des del primer moment.
 
-### 5.2 Com funciona pas a pas
+### 6.2 Com funciona pas a pas
 
 **1. Demana les dades a l'administrador**
 El script demana de forma interactiva el nom d'usuari, la contrasenya, el rol i el host. Si no s'especifica host, agafa `localhost` per defecte.
@@ -529,7 +529,7 @@ Si totes les validacions són correctes, executa les següents sentències SQL:
 **5. Genera el fitxer .sql**
 Totes les sentències SQL executades es guarden al fitxer `usuaris_creats.sql` perquè l'administrador pugui revisar-les o executar-les posteriorment en un altre servidor.
 
-### 5.3 Codi del script
+### 6.3 Codi del script
 
 ```bash
 #!/bin/bash
@@ -587,7 +587,7 @@ fi
 
 ![Secure Mariadb](Captures4/Bloc4-CreacioUsuari.png)
 
-### 5.4 Comprovació
+### 6.4 Comprovació
 
 ![Secure Mariadb](Captures4/Bloc4-CreacioUsuari2.png)
 
@@ -595,13 +595,13 @@ fi
 
 ---
 
-## 6. Triggers de Control i Auditoria
+## 7. Triggers de Control i Auditoria
 
 S'han implementat **5 triggers** que donen suport a la seguretat i auditoria de la base de dades. Tots els triggers s'executen **abans** de la inserció o modificació (`BEFORE`) per poder bloquejar l'operació si cal.
 
 ---
 
-### 6.1 Trigger — Quota diària de trucades
+### 7.1 Trigger — Quota diària de trucades
 
 **Nom:** `check_quota_diaria`
 **S'activa:** `BEFORE INSERT ON trucada`
@@ -641,11 +641,11 @@ VALUES (2, 3, NOW(), NOW(), 1, 'alta');
 -- Repetit 21 vegades fins que surt l'error
 ```
 
-> 📸 **CAPTURA**: Error `Quota diaria de trucades assolida`
+![Trigger](Captures4/Bloc4-Comprovacio-quotadiaria.png)
 
 ---
 
-### 6.2 Trigger — Quota mensual de trucades
+### 7.2 Trigger — Quota mensual de trucades
 
 **Nom:** `check_quota_mensual`
 **S'activa:** `BEFORE INSERT ON trucada`
@@ -692,11 +692,11 @@ INSERT INTO trucada (id_originador, id_destinatari, inici, fi, duracio, qualitat
 VALUES (1, 2, NOW(), NOW(), 99999, 'alta');
 ```
 
-> 📸 **CAPTURA**: Error `Quota mensual de trucades assolida`
+![Secure Mariadb](Captures4/Bloc4-Comrpovacio-quotamensual.png)
 
 ---
 
-### 6.3 Trigger — Bloqueig d'usuaris
+### 7.3 Trigger — Bloqueig d'usuaris
 
 **Nom:** `check_usuari_bloquejat`
 **S'activa:** `BEFORE INSERT ON trucada`
@@ -739,11 +739,11 @@ INSERT INTO trucada (id_originador, id_destinatari, inici, fi, duracio, qualitat
 VALUES (4, 1, NOW(), NOW(), 10, 'alta');
 ```
 
-> 📸 **CAPTURA**: Error `Usuari originador bloquejat`
+![Secure Mariadb](Captures4/Bloc4-Comprovacio-bloqueigusuari.png)
 
 ---
 
-### 6.4 Trigger — Auditoria per a treballador/vendes
+### 7.4 Trigger — Auditoria per a treballador/vendes
 
 **Nom:** `audit_nomines_update`
 **S'activa:** `BEFORE UPDATE ON nomines`
@@ -782,11 +782,11 @@ DELIMITER ;
 SELECT * FROM avisos;
 ```
 
-> 📸 **CAPTURA**: `SELECT * FROM avisos` mostrant els registres d'auditoria
+![Secure Mariadb](Captures4/Bloc4-Comprovacio-Auditorianomines.png)
 
 ---
 
-### 6.5 Trigger — Auditoria pel rol administracio
+### 7.5 Trigger — Auditoria pel rol administracio
 
 **Nom:** `audit_administracio_trucades`
 **S'activa:** `BEFORE UPDATE ON trucada`
@@ -821,29 +821,31 @@ DELIMITER ;
 
 **Comprovació:** De la mateixa manera que el trigger anterior, queda evidenciat a la taula `avisos`. El sistema de doble protecció (permisos + trigger) garanteix que cap accés no autoritzat passi desapercebut.
 
-```sql
-SELECT * FROM avisos;
-```
 
-> 📸 **CAPTURA**: `SELECT * FROM avisos` mostrant tots els registres d'auditoria
 
 ---
 
-### 6.6 Verificació de tots els triggers
+### 7.6 Verificació de tots els triggers
+
+Per verificar que els 5 triggers s'han creat correctament s'utilitza la següent consulta sobre `information_schema`:
 
 ```sql
-SHOW TRIGGERS;
+SELECT 
+  TRIGGER_NAME AS 'Nom del Trigger',
+  EVENT_MANIPULATION AS 'Operació',
+  EVENT_OBJECT_TABLE AS 'Taula',
+  ACTION_TIMING AS 'Moment'
+FROM information_schema.TRIGGERS
+WHERE TRIGGER_SCHEMA = 'innovatetech';
 ```
 
-> 📸 **CAPTURA**: `SHOW TRIGGERS` mostrant els 5 triggers creats i actius
-
-> 📸 **CAPTURA**: Posar aquí la captura del SHOW TRIGGERS amb els 5 triggers
+![Triggers](Captures4/Bloc4-ShowTrigger.png)
 
 ---
 
-## 7. Event Periòdic de Backup
+## 8. Event Periòdic de Backup
 
-### 7.1 Justificació de la periodicitat
+### 8.1 Justificació de la periodicitat
 
 S'ha escollit una periodicitat **diària** amb execució a les **02:00h** perquè:
 - És l'hora de menor activitat del sistema, minimitzant l'impacte en el rendiment
@@ -851,24 +853,24 @@ S'ha escollit una periodicitat **diària** amb execució a les **02:00h** perqu�
 - En cas d'incident, la pèrdua màxima de dades seria d'un dia (RPO de 24h)
 - És una pràctica estàndard en entorns empresarials per a bases de dades de gestió
 
-### 7.2 Creació del directori de backup
+### 8.2 Creació del directori de backup
 
 ```bash
 sudo mkdir -p /var/lib/mysql/backup
 sudo chown mysql:mysql /var/lib/mysql/backup
 ```
 
-> 📸 **CAPTURA**: Posar aquí la captura de la creació del directori
+![backup](Captures4/Bloc4-directorio-backup.png)
 
-### 7.3 Activació de l'event scheduler
+### 8.3 Activació de l'event scheduler
 
 ```sql
 SET GLOBAL event_scheduler = ON;
 ```
 
-> 📸 **CAPTURA**: Posar aquí la captura de l'activació de l'event scheduler
+![backup](Captures4/Bloc4-event-ON.png)
 
-### 7.4 Creació de l'event
+### 8.4 Creació de l'event
 
 L'event `backup_diari` s'executa automàticament cada dia a les 02:00h i realitza una còpia de seguretat de les taules crítiques de la base de dades d'InnovateTech. Utilitza la sentència `SELECT ... INTO OUTFILE` per exportar les dades en format CSV al directori `/var/lib/mysql/backup/`.
 
@@ -901,9 +903,8 @@ END$$
 DELIMITER ;
 ```
 
-> 📸 **CAPTURA**: Posar aquí la captura de la creació de l'event
 
-### 7.5 Taules incloses al backup
+### 8.5 Taules incloses al backup
 
 - `empleat` — dades del personal de l'empresa
 - `clients` — dades dels clients externs
@@ -912,10 +913,52 @@ DELIMITER ;
 
 Cada vegada que l'event s'executa correctament, insereix un registre a la taula `control_backup` amb la data, hora, taules incloses i resultat. Això permet a l'administrador verificar que els backups s'estan realitzant correctament.
 
-### 7.6 Verificació
+### 8.6 Verificació
 
 ```sql
 SHOW EVENTS;
 ```
 
-> 📸 **CAPTURA**: Posar aquí la captura del SHOW EVENTS mostrant backup_diari ENABLED
+![backup](Captures4/Bloc4-Showevents.png)
+
+## 9. Conclusions
+
+### 9.1 Resum de la implementació
+
+S'ha dissenyat i implementat una base de dades completa per a InnovateTech que cobreix totes les necessitats funcionals especificades al projecte:
+
+| Apartat | Estat | Descripció |
+|---|---|---|
+| Diagrama E/R | ✅ Completat | 15 entitats amb relacions i cardinalitats |
+| Model Relacional | ✅ Completat | Esquema complet amb PK i FK |
+| Taules | ✅ Completat | 15 taules amb totes les restriccions |
+| Dades de prova | ✅ Completat | Dades realistes a totes les taules |
+| Rols | ✅ Completat | 4 rols amb permisos diferenciats |
+| Script usuaris | ✅ Completat | Script Bash amb gestió d'errors |
+| Triggers | ✅ Completat | 5 triggers de control i auditoria |
+| Backup | ✅ Completat | Event diari automàtic |
+
+### 9.2 Decisions de disseny destacades
+
+**Separació de responsabilitats:** S'ha aplicat el principi de mínim privilegi en el disseny dels rols, garantint que cada departament només accedeix a la informació necessària per a la seva funció.
+
+**Seguretat per capes:** El sistema de seguretat combina tres capes: permisos a nivell de rol, triggers d'auditoria i registre d'avisos. Aquesta aproximació garanteix que qualsevol intent d'accés no autoritzat sigui detectat i registrat.
+
+**Auditoria contínua:** La taula `avisos` actua com a log d'auditoria centralitzat. Qualsevol intent d'accés no autoritzat queda registrat amb l'usuari, la taula afectada, l'operació intentada i la data/hora.
+
+**Alta disponibilitat de dades:** L'event de backup diari garanteix que en cas d'incident la pèrdua màxima de dades sigui d'un dia (RPO = 24h), complint amb els estàndards empresarials de continuïtat del negoci.
+
+### 9.3 Compliment normatiu
+
+La implementació té en compte les normatives internacionals de protecció de dades:
+
+| Normativa | Mesura aplicada |
+|---|---|
+| RGPD | Dades de clients protegides per controls d'accés estrictes |
+| Mínim privilegi | Cada rol accedeix únicament a les dades necessàries |
+| Traçabilitat | Tots els intents d'accés no autoritzat queden registrats a `avisos` |
+| Continuïtat | Backups automàtics diaris de les taules crítiques |
+
+---
+
+*Documentació elaborada per al Projecte Transversal ASIXc1 · Institut Tecnològic de Barcelona · Curs 2025/2026*
