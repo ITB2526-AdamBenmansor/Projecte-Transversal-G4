@@ -1,4 +1,43 @@
-BLOC 1: PROPOSTA CPD - INFRAESTRUCTURA FÍSICA
+# BLOC 1: PROPOSTA CPD — InnovateTech
+
+---
+
+## Índex
+
+- [1.1. Introducció](#11-introducció)
+- [1.2. Ubicació i disseny de la sala de CPD](#12-ubicació-i-disseny-de-la-sala-de-cpd)
+  - [1.2.1. Ubicació](#121-ubicació)
+  - [1.2.2. Plànols de la sala](#122-plànols-de-la-sala)
+- [1.3. Distribució de la sala](#13-distribució-de-la-sala)
+  - [1.3.1. Característiques de la sala](#131-característiques-de-la-sala)
+  - [1.3.2. Seguretat física](#132-seguretat-física)
+  - [1.3.3. Climatització](#133-climatització)
+  - [1.3.4. Cablejat](#134-cablejat)
+- [1.4. Inventari](#14-inventari)
+  - [1.4.1. Servidors](#141-servidors)
+  - [1.4.2. Racks, Xarxa i Cablejat](#142-racks-xarxa-i-cablejat)
+  - [1.4.3. SAI - UPS](#143-sai---ups)
+  - [1.4.4. Seguretat Física](#144-seguretat-física)
+  - [1.4.5. Refrigeració](#145-refrigeració)
+  - [1.4.6. Resum Econòmic](#146-resum-econòmic)
+- [1.5. Distribució dels racks](#15-distribució-dels-racks)
+  - [1.5.1. Esquema visual](#151-esquema-visual)
+  - [1.5.2. Llegenda de l'esquema](#152-llegenda-de-lesquema)
+- [1.6. Instal·lació de la Xarxa](#16-installació-de-la-xarxa)
+  - [1.6.1. Descripció general](#161-descripció-general)
+  - [1.6.2. Esquema Visual](#162-esquema-visual)
+  - [1.6.3. Elements de la xarxa](#163-elements-de-la-xarxa)
+  - [1.6.4. Adreçament IP](#164-adreçament-ip)
+  - [1.6.5. VLANs](#165-vlans)
+- [1.7. Seguretat lògica](#17-seguretat-lògica)
+  - [1.7.1. Firewall](#171-firewall)
+  - [1.7.2. Control d'accés lògic](#172-control-daccés-lògic)
+  - [1.7.3. Monitoratge](#173-monitoratge)
+  - [1.7.4. RAIDs](#174-raids)
+  - [1.7.5. Còpies de Seguretat (Backups)](#175-còpies-de-seguretat-backups)
+  - [1.7.6. Prevenció de riscos laborals (PRL)](#176-prevenció-de-riscos-laborals-prl)
+
+---
 
 ## 1.1. Introducció
 
@@ -47,11 +86,11 @@ evitar que qualsevol persona pugui trobar o saber on es troba.
 
 **Vista de planta**
 
-![Vista de planta](Captures_1.1/planta.png)
+![Vista de planta](Captures_1.1/vista_planta.png)
 
 **Vista de perfil**
 
-![Vista de perfil](imatges/perfil.png)
+![Vista de perfil](Captures_1.1/vista_perfil.png)
 
 ---
 
@@ -163,7 +202,7 @@ suport de redundància en alimentació. Tots els servidors inclouen discos SSD p
 sistema operatiu i discos HDD per a les dades, optimitzant el cost sense sacrificar
 rendiment.
 
-![Taula servidors](imatges/taula_servidors.png)
+![Taula servidors](Captures_1.1/servidors.png)
 
 ---
 
@@ -176,7 +215,7 @@ i 1 GbE cap als servidors, suficient per als serveis desplegats. El cablejat est
 Cat6A garanteix transmissions de fins a 10 GbE i és la categoria recomanada per a
 nous desplegaments de CPD.
 
-![Taula racks i xarxa](imatges/taula_racks.png)
+![Taula racks i xarxa](Captures_1.1/xarxa.png)
 
 ---
 
@@ -189,7 +228,7 @@ de tots els serveis o per engegar un generador extern en cas de tall elèctric
 prolongat. S'ha escollit APC per ser un dels fabricants més fiables del mercat en
 sistemes d'alimentació ininterrompuda.
 
-![Taula SAI](imatges/taula_sai.png)
+![Taula SAI](Captures_1.1/SAI.png)
 
 ---
 
@@ -202,7 +241,7 @@ resolució de 4MP i visió nocturna. Per a la detecció d'incendis s'ha optat pe
 Hochiki, fabricant reconegut en sistemes de detecció analògica. Els extintors són de
 CO₂, adequats per a sales amb equipament electrònic ja que no deixen residus.
 
-![Taula seguretat física](imatges/taula_seguretat.png)
+![Taula seguretat física](Captures_1.1/seguretat.png)
 
 ---
 
@@ -214,7 +253,7 @@ Schneider Electric és un dels fabricants de referència en refrigeració per a 
 La capacitat total de 20 kW és més que suficient per a la càrrega tèrmica estimada
 de 2,5 kW, deixant un marge ampli per a futures ampliacions.
 
-![Taula refrigeració](imatges/taula_refrigeracio.png)
+![Taula refrigeració](Captures_1.1/Refrigeracio.png)
 
 ---
 
@@ -225,7 +264,7 @@ La inversió total en infraestructura física del CPD és d'aproximadament 46.18
 física. Aquest pressupost és coherent amb una empresa de gamma mitjana com
 InnovateTech.
 
-![Taula resum econòmic](imatges/taula_resum.png)
+![Taula resum econòmic](Captures_1.1/Pressupost.png)
 
 ---
 
@@ -238,7 +277,7 @@ espais buits estan reservats per a futures ampliacions.
 
 ### 1.5.1. Esquema visual
 
-![Esquema racks](imatges/esquema_racks.png)
+![Esquema racks](Captures_1.1/racks.png)
 
 ---
 
@@ -274,8 +313,8 @@ tràfic de videovigilància.
 
 ### 1.6.2. Esquema Visual
 
-![Esquema xarxa](imatges/esquema_xarxa.png)
-
+![Esquema xarxa](Captures_1.1/VLAN1.png)
+![Esquema xarxa](Captures_1.1/VLAN2.png)
 ---
 
 ### 1.6.3. Elements de la xarxa
