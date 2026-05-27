@@ -58,6 +58,7 @@ Finalment, ja ens ficarem en la part del AWS, parlant de com distribuirem els se
 a utilitzar i quins tipus de màquines desplegarem per començar amb la resta del
 projecte.
 
+[↑ Tornar a l'índex](#Índex)
 ---
 
 ## 1.2. Ubicació i disseny de la sala de CPD
@@ -115,6 +116,7 @@ entre els racks, per on pujarà l'aire refrigerant la maquinària.
 Finalment, la porta que connecta directament amb la sala està blindada d'acer amb
 tancament automàtic i obertura cap a l'exterior.
 
+[↑ Tornar a l'índex](#Índex)
 ---
 
 ### 1.3.2. Seguretat física
@@ -204,6 +206,7 @@ rendiment.
 
 ![Taula servidors](Captures_1.1/servidors.png)
 
+[↑ Tornar a l'índex](#Índex)
 ---
 
 ### 1.4.2. Racks, Xarxa i Cablejat
@@ -243,6 +246,8 @@ CO₂, adequats per a sales amb equipament electrònic ja que no deixen residus.
 
 ![Taula seguretat física](Captures_1.1/seguretat.png)
 
+[↑ Tornar a l'índex](#Índex)
+
 ---
 
 ### 1.4.5. Refrigeració
@@ -278,6 +283,8 @@ espais buits estan reservats per a futures ampliacions.
 ### 1.5.1. Esquema visual
 
 ![Esquema racks](Captures_1.1/racks.png)
+
+[↑ Tornar a l'índex](#Índex)
 
 ---
 
@@ -315,6 +322,8 @@ tràfic de videovigilància.
 
 ![Esquema xarxa](Captures_1.1/esquema_xarxa.png)
 
+[↑ Tornar a l'índex](#Índex)
+
 ---
 
 ### 1.6.3. Elements de la xarxa
@@ -340,6 +349,8 @@ Cat6A, cadascun amb una IP fixa assignada.
 Connectat al Switch Core R1 mitjançant 1 GbE Cat6A. Emmagatzema els backups
 de tots els servidors i és accessible de forma remota des de qualsevol punt de la
 xarxa.
+
+[↑ Tornar a l'índex](#Índex)
 
 ---
 
@@ -394,6 +405,8 @@ Les regles principals aplicades són:
 - El tràfic entre la VLAN 10 i la VLAN 20 està restringit, impedint l'accés a les
   càmeres des de la xarxa de servidors.
 
+[↑ Tornar a l'índex](#Índex)
+
 ---
 
 ### 1.7.2. Control d'accés lògic
@@ -430,6 +443,8 @@ fallada d'un disc:
   de dades.
 - **NAS Synology** → RAID-5 amb 4 discos de 4TB, proporcionant 12TB
   d'espai útil i tolerància a la fallada d'un disc.
+
+[↑ Tornar a l'índex](#Índex)
 
 ---
 
@@ -471,6 +486,8 @@ xarxa interna.
 - Les còpies incrementals i diferencials es conserven durant **2 setmanes**.
 - Les còpies a AWS S3 es conserven durant **3 mesos**.
 
+[↑ Tornar a l'índex](#Índex)
+
 ---
 
 ### 1.7.6. Prevenció de riscos laborals (PRL)
@@ -486,6 +503,9 @@ aplicables a una sala de servidors:
   barra antipànic per facilitar l'evacuació ràpida.
 - **Extintors:** un extintor de CO₂ situat a prop de la porta d'entrada, adequat
   per a focs elèctrics sense deixar residus als equips.
+
+  [↑ Tornar a l'índex](#Índex)
+
 - **Terra antilliscant:** el terra tècnic té acabat antilliscant per evitar caigudes
   durant les tasques de manteniment.
 - **Gestió del cablejat:** tot el cablejat està ordenat i recollit per evitar
