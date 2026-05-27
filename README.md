@@ -59,6 +59,7 @@ a utilitzar i quins tipus de màquines desplegarem per començar amb la resta de
 projecte.
 
 [↑ Tornar a l'índex](#Índex)
+
 ---
 
 ## 1.2. Ubicació i disseny de la sala de CPD
@@ -93,6 +94,8 @@ evitar que qualsevol persona pugui trobar o saber on es troba.
 
 ![Vista de perfil](Captures_1.1/vista_perfil.png)
 
+[↑ Tornar a l'índex](#Índex)
+
 ---
 
 ## 1.3. Distribució de la sala
@@ -117,6 +120,7 @@ Finalment, la porta que connecta directament amb la sala està blindada d'acer a
 tancament automàtic i obertura cap a l'exterior.
 
 [↑ Tornar a l'índex](#Índex)
+
 ---
 
 ### 1.3.2. Seguretat física
@@ -163,6 +167,8 @@ cicle es repeteix constantment per mantenir la temperatura de la sala entre **20
 Els dos equips treballen en configuració **N+1**, és a dir, un d'ells pot assumir tota
 la càrrega en cas que l'altre falli, garantint la continuïtat del servei en tot moment.
 
+[↑ Tornar a l'índex](#Índex)
+
 ---
 
 ### 1.3.4. Cablejat
@@ -207,6 +213,7 @@ rendiment.
 ![Taula servidors](Captures_1.1/servidors.png)
 
 [↑ Tornar a l'índex](#Índex)
+
 ---
 
 ### 1.4.2. Racks, Xarxa i Cablejat
