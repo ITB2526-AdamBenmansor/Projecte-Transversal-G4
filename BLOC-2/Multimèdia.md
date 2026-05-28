@@ -1086,7 +1086,6 @@ Un cop configurat, el portal és accessible a:
 | `https://54.157.67.55.sslip.io` | Jitsi Meet (domini separat) |
 
 ![Portal web amb vídeo i àudio funcionant](captures/Bloc2-39.png)
-![Redirecció HTTP a HTTPS](captures/Bloc2-40.png)
 
 ### 5.5 Resolució d'incidències
 
