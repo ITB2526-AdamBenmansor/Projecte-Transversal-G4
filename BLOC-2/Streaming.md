@@ -262,7 +262,6 @@ curl -v http://localhost:8000/formacio 2>&1 | grep "Content-Type"
 **Verificació des de clients:**
 
 ![Canal corporatiu MP3 reproduint al navegador](captures/Bloc2-16.png)
-![Canal formació OGG reproduint a Firefox](captures/Bloc2-17.png)
 ![VLC reproduint canal corporatiu](captures/Bloc2-18.png)
 ![VLC reproduint canal formació OGG](captures/Bloc2-19.png)
 
@@ -404,11 +403,17 @@ http {
             add_header Access-Control-Allow-Origin *;
         }
 
+        location /radio/ {
+            proxy_pass http://127.0.0.1:8000/;
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            add_header Access-Control-Allow-Origin *;
+        }
+
         location /admin/video {
             rtmp_stat all;
             rtmp_stat_stylesheet /stat.xsl;
         }
-
         location = /stat.xsl {
             root /usr/local/nginx/html;
         }
@@ -419,6 +424,7 @@ http {
         }
     }
 }
+
 ```
 
 ![Fitxer de configuració nginx.conf](captures/Bloc2-23.1.png)
