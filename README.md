@@ -9,7 +9,7 @@
 
 ---
 
-## 📑 Índex General del Projecte
+##  Índex General del Projecte
 
 1. [Introducció i Objectiu Global](#1-introducció-i-objectiu-global)
 2. [Estructura del Repositori](#2-estructura-del-repositori)
@@ -38,10 +38,10 @@ La documentació tècnica es troba dividida en quatre mòduls o blocs principals
 
 | Fitxer / Document | Descripció | Contingut Clau |
 | :--- | :--- | :--- |
-| 📄 `Proposta CPD  - Infraestructura Física.md` | Disseny físic de la sala de servidors corporativa. | Plànols, climatització, inventari de maquinària, xarxa física, seguretat i estratègia de backup 3-2-1. |
-| 📄 `AWS.md` | Implementació del nucli de xarxa i automatització cloud. | Instàncies EC2, playbooks d'Ansible, servidor OpenLDAP central, clients SSSD, DNS intern i securització SSL/TLS. |
-| 📄 `Multimèdia.md` | Desplegament de serveis multimèdia i internet. | Streaming d'àudio (Icecast2), streaming de vídeo (NGINX-RTMP), videoconferència (Jitsi Meet) i auditories d'amplada de banda. |
-| 📄 `BASE_DE_DADES.md` | Disseny i administració del motor de dades corporatiu. | Model Relacional, servidor MariaDB securitzat, 15 taules relacionals, rols d'accés, triggers d'auditoria i backups automàtics. |
+|  `Proposta CPD  - Infraestructura Física.md` | Disseny físic de la sala de servidors corporativa. | Plànols, climatització, inventari de maquinària, xarxa física, seguretat i estratègia de backup 3-2-1. |
+|  `AWS.md` | Implementació del nucli de xarxa i automatització cloud. | Instàncies EC2, playbooks d'Ansible, servidor OpenLDAP central, clients SSSD, DNS intern i securització SSL/TLS. |
+|  `Multimèdia.md` | Desplegament de serveis multimèdia i internet. | Streaming d'àudio (Icecast2), streaming de vídeo (NGINX-RTMP), videoconferència (Jitsi Meet) i auditories d'amplada de banda. |
+|  `BASE_DE_DADES.md` | Disseny i administració del motor de dades corporatiu. | Model Relacional, servidor MariaDB securitzat, 15 taules relacionals, rols d'accés, triggers d'auditoria i backups automàtics. |
 
 ---
 
