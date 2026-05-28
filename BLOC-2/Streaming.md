@@ -78,7 +78,7 @@ sudo chmod 700 /home/innovatech-admin/.ssh
 sudo chmod 600 /home/innovatech-admin/.ssh/authorized_keys
 sudo passwd -l ubuntu
 ```
-
+![SSH al servidor amb clau](captures/Bloc2-02.png)
 ### 1.2 Seguretat de xarxa
 
 S'han configurat dos nivells de control d'accés: Security Group
@@ -94,7 +94,6 @@ d'AWS (primera capa) i UFW (segona capa a nivell de SO).
 | 4443 | TCP | Jitsi Videobridge | Internet |
 | 10000 | UDP | Jitsi WebRTC | Internet |
 
-![Security Group AWS](captures/Bloc2-02.png)
 ![UFW ports oberts](captures/Bloc2-03.png)
 
 [↑ Tornar a l'índex](#índex)
@@ -136,7 +135,6 @@ d'accés per als rols de source, relay i administrador:
 | Relay password | @ITB2026 |
 | Admin password | @ITB2026 |
 
-![Assistent configuració Icecast2](captures/Bloc2-04.png)
 ![Icecast2 instal·lat correctament](captures/Bloc2-05.png)
 
 ### 2.3 Configuració
@@ -155,7 +153,7 @@ S'han configurat dos canals amb formats diferenciats:
   qualitat de veu al mateix bitrate, ideal per a sessions
   formatives.
 
-![Fitxer de configuració icecast.xml](captures/Bloc2-06.png)
+![Fitxer de configuració icecast.xml](captures/Bloc2-07.png)
 
 ### 2.4 Font d'àudio amb ffmpeg
 
@@ -170,7 +168,7 @@ Fitxers d'àudio preparats al directori
 - `corporate.mp3`: canal corporatiu, emès a 128 kbps en MP3.
 - `formacio.ogg`: canal de formació, emès a 96 kbps en OGG Vorbis.
 
-![Fitxers d'àudio al servidor](captures/Bloc2-07.png)
+![Fitxers d'àudio al servidor](captures/Bloc2-08.png)
 
 S'han creat dos serveis systemd per garantir l'inici automàtic
 i la recuperació en cas de fallada:
@@ -227,8 +225,8 @@ Els paràmetres més rellevants dels serveis són:
 - `-content_type application/ogg`: força el Content-Type correcte
   per al canal OGG (solució a la incidència detectada).
 
-![Servei icecast-corporate actiu](captures/Bloc2-08.png)
-![Servei icecast-formacio actiu](captures/Bloc2-09.png)
+![Servei icecast-corporate actiu](captures/Bloc2-09.png)
+![Servei icecast-formacio actiu](captures/Bloc2-10.png)
 
 ### 2.5 Verificació del servei
 
@@ -239,19 +237,19 @@ sudo systemctl status icecast2
 ss -tlnp | grep 8000
 ```
 
-![Servei Icecast2 active running](captures/Bloc2-10.png)
-![Port 8000 en estat LISTEN](captures/Bloc2-11.png)
+![Servei Icecast2 active running](captures/Bloc2-11.png)
+![Port 8000 en estat LISTEN](captures/Bloc2-12.png)
 
 **Verificació via interfície web:**
 
 | URL | Descripció |
 |-----|------------|
-| `http://54.157.67.55:8000/` | Pàgina pública de streams |
+| `http://54.157.67.55:8080/` | Pàgina pública de streams |
 | `http://54.157.67.55:8000/admin/` | Panell d'administració |
 | `http://54.157.67.55:8000/admin/listmounts.xsl` | Muntatges actius |
 
-![Panell d'administració Icecast2](captures/Bloc2-12.png)
-![Muntatges actius amb els dos canals](captures/Bloc2-13.png)
+![Panell d'administració Icecast2](captures/Bloc2-13.png)
+![Muntatges actius amb els dos canals](captures/Bloc2-14.png)
 
 **Verificació Content-Type OGG:**
 
@@ -259,14 +257,14 @@ ss -tlnp | grep 8000
 curl -v http://localhost:8000/formacio 2>&1 | grep "Content-Type"
 ```
 
-![Content-Type application/ogg verificat](captures/Bloc2-14.png)
+![Content-Type application/ogg verificat](captures/Bloc2-15.png)
 
 **Verificació des de clients:**
 
-![Canal corporatiu MP3 reproduint al navegador](captures/Bloc2-15.png)
-![Canal formació OGG reproduint a Firefox](captures/Bloc2-16.png)
-![VLC reproduint canal corporatiu](captures/Bloc2-17.png)
-![VLC reproduint canal formació OGG](captures/Bloc2-18.png)
+![Canal corporatiu MP3 reproduint al navegador](captures/Bloc2-16.png)
+![Canal formació OGG reproduint a Firefox](captures/Bloc2-17.png)
+![VLC reproduint canal corporatiu](captures/Bloc2-18.png)
+![VLC reproduint canal formació OGG](captures/Bloc2-19.png)
 
 ### 2.6 Resolució d'incidències
 
@@ -320,7 +318,7 @@ sudo apt install -y build-essential libpcre3 libpcre3-dev \
 - `zlib1g-dev`: biblioteca de compressió per a gzip.
 - `git`: per descarregar el mòdul RTMP de GitHub.
 
-![Dependències instal·lades](captures/Bloc2-19.png)
+![Dependències instal·lades](captures/Bloc2-20.png)
 
 ### 3.3 Descàrrega i compilació
 
@@ -347,8 +345,8 @@ Paràmetres de compilació:
 - `--with-http_mp4_module`: suport seek en fitxers MP4.
 - `--add-module=/tmp/nginx-rtmp-module`: mòdul RTMP.
 
-![NGINX i mòdul RTMP descarregats](captures/Bloc2-20.png)
-![NGINX compilat correctament](captures/Bloc2-21.png)
+![NGINX i mòdul RTMP descarregats](captures/Bloc2-21.png)
+![NGINX compilat correctament](captures/Bloc2-22.png)
 
 ### 3.4 Configuració
 
@@ -423,7 +421,8 @@ http {
 }
 ```
 
-![Fitxer de configuració nginx.conf](captures/Bloc2-22.png)
+![Fitxer de configuració nginx.conf](captures/Bloc2-23.1.png)
+![Fitxer de configuració nginx.conf](captures/Bloc2-23.5.png)
 
 ### 3.5 Servei systemd
 
@@ -451,7 +450,7 @@ sudo systemctl enable nginx-rtmp
 sudo systemctl start nginx-rtmp
 ```
 
-![Servei nginx-rtmp actiu](captures/Bloc2-23.png)
+![Servei nginx-rtmp actiu](captures/Bloc2-24.png)
 
 ### 3.6 Font de vídeo amb ffmpeg
 
@@ -486,8 +485,8 @@ User=innovatech-admin
 WantedBy=multi-user.target
 ```
 
-![Vídeo al servidor](captures/Bloc2-24.png)
-![Segments HLS generats a /tmp/hls](captures/Bloc2-25.png)
+![Vídeo al servidor](captures/Bloc2-25.png)
+![Segments HLS generats a /tmp/hls](captures/Bloc2-26.1.png)
 
 ### 3.7 Reproductor web
 
@@ -569,9 +568,10 @@ ss -tlnp | grep -E "1935|8080"
 ```
 
 ![Serveis nginx-rtmp i nginx-stream actius](captures/Bloc2-26.png)
-![Ports 1935 i 8080 escoltant](captures/Bloc2-27.png)
-![Reproductor web amb vídeo actiu](captures/Bloc2-28.png)
-![VLC reproduint stream HLS](captures/Bloc2-29.png)
+![Serveis nginx-rtmp i nginx-stream actius](captures/Bloc2-27.png)
+![Ports 1935 i 8080 escoltant](captures/Bloc2-28.png)
+![Reproductor web amb vídeo actiu](captures/Bloc2-29.png)
+![VLC reproduint stream HLS](captures/Bloc2-30.png)
 
 ### 3.9 Resolució d'incidències
 
@@ -686,9 +686,9 @@ sudo systemctl status jicofo
 sudo systemctl status prosody
 ```
 
-![Tres serveis Jitsi actius](captures/Bloc2-30.png)
-![Pàgina principal Jitsi Meet](captures/Bloc2-31.png)
-![Videotrucada funcional amb 2 participants](captures/Bloc2-32.png)
+![Tres serveis Jitsi actius](captures/Bloc2-31.png)
+![Pàgina principal Jitsi Meet](captures/Bloc2-32.png)
+![Videotrucada funcional amb 2 participants](captures/Bloc2-33.png)
 
 ### 4.7 Resolució d'incidències
 
@@ -750,7 +750,7 @@ speedtest-cli --server 52535 --simple
 | Download | 802.43 Mbit/s |
 | Upload | 751.65 Mbit/s |
 
-![Speedtest servidor en repòs](captures/Bloc2-33.png)
+![Speedtest servidor en repòs](captures/Bloc2-34.png)
 
 ### 5.4 Prova 2 — Servidor amb càrrega
 
@@ -769,7 +769,6 @@ speedtest-cli --server 52535 --simple
 | Download | 800.46 Mbit/s |
 | Upload | 781.60 Mbit/s |
 
-![Nethogs consum per procés](captures/Bloc2-34.png)
 ![Speedtest servidor amb càrrega](captures/Bloc2-35.png)
 
 ### 5.5 Anàlisi dels resultats
