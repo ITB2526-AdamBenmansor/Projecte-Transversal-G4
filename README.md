@@ -88,7 +88,7 @@ evitar que qualsevol persona pugui trobar o saber on es troba.
 
 **Vista de planta**
 
-![Vista de planta](Captures_1.1/vista_planta.png)
+![Vista de planta](Captures_1.1/planol_planta.png)
 
 **Vista de perfil**
 
@@ -140,8 +140,8 @@ tots els passadissos al voltant dels racks, i dues càmeres més a cada costat d
 passadís fred per vigilar l'accés directe als racks.
 
 **Protecció contra incendis i sortides d'emergència**
-Hi ha 3 detectors d'incendis al llarg del passadís fred. També hi ha un extintor de
-CO₂ al costat de l'entrada. A les portes hi ha senyalitzacions de sortida d'emergència,
+Hi ha 3 detectors d'incendis al llarg del passadís fred. També hi ha dos extintors de
+CO₂, un al costat de l'entrada i l'altre en el racó oposat de la sala. A les portes hi ha senyalitzacions de sortida d'emergència,
 ja que és l'única entrada i sortida de la sala.
 
 ---
@@ -508,7 +508,7 @@ aplicables a una sala de servidors:
   en cas de tall elèctric.
 - **Vies d'evacuació:** la porta principal obre cap a l'exterior i disposa de
   barra antipànic per facilitar l'evacuació ràpida.
-- **Extintors:** un extintor de CO₂ situat a prop de la porta d'entrada, adequat
+- **Extintors:** dos extintora de CO₂ distribuits per la sala, adequats
   per a focs elèctrics sense deixar residus als equips.
 - **Terra antilliscant:** el terra tècnic té acabat antilliscant per evitar caigudes
   durant les tasques de manteniment.
