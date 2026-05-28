@@ -131,7 +131,7 @@ sudo mysql_secure_installation
 sudo mysql -u root -p
 ```
 
-> 📸 **CAPTURA**: Posar aquí la captura de l'accés a MariaDB
+
 ![Entrar Mariadb](Captures4/Bloc4-entrarmaria.png)
 
 ---
@@ -147,7 +147,7 @@ CREATE DATABASE innovatetech CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE innovatetech;
 ```
 
-> 📸 **CAPTURA**: Posar aquí la captura de la creació de la BD
+
 ![Secure Mariadb](Captures4/Bloc4-createdatabase.png)
 
 ### 3.2 Creació de les taules
@@ -314,7 +314,7 @@ CREATE TABLE control_backup (
 );
 ```
 
-> 📸 **CAPTURA**: Posar aquí la captura del `SHOW TABLES` amb les 15 taules
+
 ![Secure Mariadb](Captures4/Bloc4-Showtables.png)
 
 ### 3.3 Verificació de l'estructura de les taules
@@ -325,7 +325,7 @@ DESCRIBE usuari;
 DESCRIBE trucada;
 ```
 
-> 📸 **CAPTURA**: Posar aquí la captura dels DESCRIBE
+
 ![Secure Mariadb](Captures4/Bloc4-Describe.png)
 
 ### 4. Dades de prova
