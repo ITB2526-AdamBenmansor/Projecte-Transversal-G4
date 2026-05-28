@@ -693,7 +693,7 @@ INSERT INTO trucada (id_originador, id_destinatari, inici, fi, duracio, qualitat
 VALUES (1, 2, NOW(), NOW(), 99999, 'alta');
 ```
 
-![Secure Mariadb](Captures4/Bloc4-Comrpovacio-quotamensual.png)
+![Secure Mariadb](Captures4/Bloc4-Comprovacio-quotamensual.png)
 
 ---
 
